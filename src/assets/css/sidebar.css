@@ -1,0 +1,169 @@
+*{
+   margin:0;
+   padding:0;
+   text-decoration: none;
+}
+
+.a{
+   color: #fff !important;
+}
+
+.enlace{
+   color: #fff !important;
+}
+
+.enlacenav{
+   color: rgb(0, 0, 0) !important;
+   
+}
+
+
+
+.container_side{
+   display:flex;
+   margin-top: -65px;
+}
+main{
+   width: 100%;
+   padding: 5px;
+    margin-top: 75px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.sidebar{
+   color: #fff;
+   height: 100vh;
+   width: 200px;
+   transition: all 0.5s;
+}
+.top_section{
+   display: flex;
+   align-items:center;
+   padding:25px 15px;
+   background: #171a1c;
+   transition: 350ms;
+}
+.logo{
+   font-size: 30px;
+   width: 20px;
+   margin-top: -15px;
+}
+
+.logo img{
+   font-size: 30px;
+   width: 160px;
+   margin-top: 7px;
+   
+}
+
+.top_section bars{
+   margin-top: 20px;
+}
+.bars{
+   display: flex;
+   font-size: 25px;
+   margin-top: -10px;
+   margin-left: 50px;
+   transition: 350ms;
+}
+.link{
+   display: flex;
+   color: #f0f0f1;
+   padding: 10px 15px;
+   gap: 15px;
+   transition: 350ms;
+}
+.link:hover{
+   background:lightskyblue;
+   color: #000;
+   transition: all 0.5s;
+}
+.active{
+   background: lightskyblue;
+   color: #000;
+}
+
+.icon, .link_text{
+   font-size: 20px;
+}
+
+.acordion{
+   height: 100vh;
+   background: #1d2327;
+   z-index: 3;
+   margin-top: -25px;
+   padding-top: 20px;
+
+}
+
+.accordion-header:hover{
+   
+   background: #171a1c;
+}
+
+.accordion-header svg {
+   margin-right: 7px;
+   margin-top: -3px;
+}
+
+
+
+.accordion-button {
+   font-size: 14px;
+   margin-left: 1rem;
+   background: transparent;
+   border: 0;
+   color: #f0f0f1;
+}
+
+.accordion-button:focus{
+   font-size: 14px;
+   margin-left: 1rem;
+   background: transparent;
+   border: 0;
+   color: rgb(255, 255, 255);
+   outline: 0px;
+}
+
+
+.accordion-body{
+ 
+   margin-left: 2.5rem;
+    font-size: 20px;
+   
+}
+
+.accordion-body a{
+   
+    font-size: 13px;
+    margin-top: -15px;
+    color: #f0f0f1;
+    
+}
+.accordion-body a:hover{
+   
+   color: #fb9678;
+   
+}
+
+.fico{
+   display: inline-flex;
+   font-size: 1.3rem;
+}
+
+.Nav1 {
+    background: #00196f;
+    height:60px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; 
+}
+
+.nav-link {
+   color: #fff;
+   font-size: 15px;
+}
+
+
+;
+

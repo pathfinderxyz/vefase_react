@@ -1,0 +1,62 @@
+        
+
+.sidebar-nav>ul>li.active>a i {
+    color: #f0f0f1 !important;
+}
+
+.sidebar-nav ul li a.active, .sidebar-nav ul li a:hover {
+    color: #5498ff !important;
+}
+.sidebar-nav ul li a.active i, .sidebar-nav ul li a:hover i {
+    color: #5498ff !important;
+}
+.sidebar-nav>ul>li.active>a {
+    color: #5498ff !important;
+    
+}
+.sidebar-nav>ul>li.active>a {
+    border-left: 3px solid #5498ff !important;
+    background: #171a1c !important;
+}
+
+.sidebar-nav ul li.active>ul {
+    
+    background: #2c3338 !important;
+}
+
+
+.skin-default-dark .left-sidebar {
+    background: #171a1c !important;
+}
+.sidebar-nav ul li a {
+    color: #f0f0f1 !important;
+    font-size: 13px !important;
+
+    
+}
+.topbar .top-navbar .navbar-header {
+  background: #171a1c !important;
+  
+}
+.skin-default-dark .sidebar-nav>ul>li.active>a {
+    color: #5498ff;
+    border-left: 3px solid #5498ff !important;
+}
+
+.left-sidebar {
+  background:  #1d2327 !important;
+}
+
+.topbar .top-navbar .navbar-nav>.nav-item>.nav-link {
+   
+    font-size: 15px !important;
+    
+    color: #ddd !important;
+    
+}
+
+html body .navbar-dark .mailbox .message-center a .mail-contnet {
+   
+    color: #000;
+}
+
