@@ -2,6 +2,7 @@ import React from "react";
 import Sidebar from "../components/sidebar";
 import Card from "react-bootstrap/Card";
 
+
 const Inicio = () => {
   return (
     <div>
@@ -12,7 +13,7 @@ const Inicio = () => {
             <Card.Body>
               <Card.Title>¡Sistema en construccion!</Card.Title>
               <Card.Text>
-                En estos momentos nos encontramos migrando la APP a Reactjs.
+
               </Card.Text>
             </Card.Body>
           </Card>

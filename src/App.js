@@ -1,10 +1,9 @@
-/* import React, { useState } from 'react'; */
-import React from 'react';
-import Login from './components/login';
-/* import Inicio from './components/Inicio'; */
+import React, { useState } from 'react';
+import Login from './components/Login';
+import Inicio from './views/Inicio';
 
 
-/* const App = () => {
+const App = () => {
 
     const [conectado, setConectado] = useState(false);
 
@@ -15,19 +14,9 @@ import Login from './components/login';
 	return (
 		conectado ? <Inicio/> : <Login acceder={acceder}/>
 	);
-} */
+} 
 
-const App = () => {
-	return (
-		
-		<div>
-			<div>
-			   <Login/>
-			</div>
-		</div>
-		
-	);
-}
+
 
  
 export default App;

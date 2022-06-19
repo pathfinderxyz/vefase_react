@@ -88,7 +88,7 @@ main{
 }
 
 .acordion{
-   height: 100vh;
+   height: 200vh;
    background: #1d2327;
    z-index: 3;
    margin-top: -25px;
@@ -152,7 +152,7 @@ main{
 }
 
 .Nav1 {
-    background: #00196f;
+     background: linear-gradient(344deg, #072bd7, #00203c);
     height:60px;
     display: flex;
     justify-content: flex-start;

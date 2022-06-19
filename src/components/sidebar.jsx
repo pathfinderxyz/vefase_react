@@ -5,7 +5,6 @@ import logovefase from './../assets/img//logo_vefase.png';
 import Accordion from 'react-bootstrap/Accordion';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-
 import { Link } from 'react-router-dom';
 
 

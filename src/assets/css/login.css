@@ -1,6 +1,36 @@
-@media (max-width: 767px){
-.login-box {
-    width: 100% !important;
-    margin-left: -25% !important;
+@media (max-width: 1400px){
+    .login-box {        
+        margin-left: -10% !important;
+        width: 120% !important;
+    }
 }
+
+@media (max-width: 991px){
+    .login-box {        
+        margin-left: -25% !important;
+        width: 150% !important;
+    }
+}
+
+@media (max-width: 767px){
+.login-box {    
+    margin-left: -25% !important;
+    width: 180% !important;
+}}
+
+@media (max-width: 575px){
+    .login-box {        
+        margin-left: -25% !important;
+        width: 100% !important;
+    }
+}
+
+.bodylogin {
+    background: rgb(36,28,164) !important;
+    background: linear-gradient(7deg, rgba(36,28,164,1) 0%, rgba(121,9,109,1) 100%)!important;
+    height: 100vh
+}
+
+.login-box{
+    border-radius:10px !important;
 }
