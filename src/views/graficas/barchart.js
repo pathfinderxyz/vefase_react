@@ -59,8 +59,8 @@ export default function BarChart() {
   }, []);
 
   return (
-    <div className="App">
+  
       <Bar data={data} options={options} />
-    </div>
+
   );
 }

@@ -100,6 +100,8 @@ const ArticulosEditar = () => {
       console.log(response.data);
     })
    }
+
+
     //////////////select subcategorias///////////////////////////
     const [dataSubcategorias, setDatasubcategorias] = useState([]);
 
@@ -109,8 +111,9 @@ const ArticulosEditar = () => {
         setDatasubcategorias(response.data);
       })
     }
+  
 
-    //////////////select subcategorias///////////////////////////
+    //////////////select plan de cuentas///////////////////////////
     const [dataplandecuentas, setDataplandecuentas] = useState([]);
 
     const peticionGetpc = async () => {
@@ -227,7 +230,7 @@ const ArticulosEditar = () => {
 
                     <br /> <br /> 
                     <label>Tipo de categorias</label>
-                    <select className='form-control' value={datosart.idtipocategoria} name='idtipocategoria' id="settipocategoria"
+                    <select className='form-control' value={dataTipocategorias.id} name='idtipocategoria' id="settipocategoria"
                      onChange={handleChange} onClick={() => peticionGetsc()}>
                      <option value={datosart.idtipocategoria}>{datosart.tipocategoria}</option>
                       {
@@ -239,7 +242,7 @@ const ArticulosEditar = () => {
 
                     <br/><br/>
                     <label>subcategorias</label>
-                    <select className='form-control' value={datosart.idsubcategoria} name='idsubcategoria' id="settipocategoria"  
+                    <select className='form-control' value={dataSubcategorias.id} name='idsubcategoria' id="settipocategoria"  
                     onChange={handleChange} >
                       <option value={datosart.idsubcategoria}>{datosart.subcategoria}</option>
                       {

@@ -1,63 +1,180 @@
 /* eslint-disable eqeqeq */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "../../components/sidebar";
 import Card from "react-bootstrap/Card";
 import * as FaIcons from "react-icons/fa";
 import { useParams } from "react-router-dom";
-import { Modal, Col, Container, Row, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
+import {
+  Modal,
+  Col,
+  Container,
+  Row,
+  ModalBody,
+  ModalHeader,
+  ModalFooter,
+} from "reactstrap";
 
-const url = "https://api.vefase.com/public/compras";
-/* const urlcd = "https://api.vefase.com/public/compras/detalles"; */
+const url = "https://api.vefase.com/public/compras/detallesxcompra"; ///////estos son articulos relacionados a esa compra ///////
+const urlcd = "https://api.vefase.com/public/compras/detalles"; /////esta es la compra unica/////////////
+const urlcategorias = "https://api.vefase.com/public/articulos/categorias";
+const urltipocategorias =
+  "https://api.vefase.com/public/articulos/tipocategorias/";
+const urlsubcategorias =
+  "https://api.vefase.com/public/articulos/subcategorias/";
+const urlartfiltro = "https://api.vefase.com/public/articulos/filtro";
 
 const DetallesCompras = () => {
-
   let { idcompra } = useParams();
   console.log(idcompra);
 
   const [data, setData] = useState([]);
 
-  /////////////Mostrar datos//////////////////////////////////
+  /////////////Mostrar datos de los articulos de cada compra//////////////////////////////////
   const peticionGet = async () => {
-    await axios.get(url).then(response => {
+    await axios.get(url + "/" + idcompra).then((response) => {
       console.log(response.data);
       setData(response.data);
       console.log(response.data);
-    })
-  }
+    });
+  };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     await peticionGet();
   }, []);
 
+  /////////////Mostrar datos compras//////////////////////////////////
+  const [datacompra, setDatacompra] = useState([]);
+
   const [modalcompra, setModalcompra] = useState(false);
   const abrirModalcompra = () => {
     setModalcompra(true);
-  }
+    peticionGetcompras();
+  };
+
+  const peticionGetcompras = async () => {
+    await axios.get(urlcd + "/" + idcompra).then((response) => {
+      setDatacompra(response.data[0]);
+      console.log(datacompra);
+    });
+  };
+
+  //////////////Recibiendo data de los input//////////////////////////
+  const [datosSeleccionados, setDatosSeleccionados] = useState({
+    id: "",
+    idcompra: idcompra,
+    nombre: "",
+    cantidad: "",
+    costo: "",
+    categoria: "",
+    idcategoria: "",
+    idtipocategoria: "",
+    idsubcategoria: "",
+    status: "",
+    plan_cuentas: "",
+  });
+
+  ///////////////Insertar Datos//////////////////////////////////
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDatosSeleccionados((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const peticionPost = async () => {
+    delete datosSeleccionados.id;
+    console.log(datosSeleccionados);
+    await axios.post(urlcd, datosSeleccionados).then((res) => {
+      peticionGet();
+      console.log(res.status);
+    });
+  };
+
   /////////////Eliminar datos//////////////////////////////////
-/*   const peticionDelete = () => {
-    axios.delete(url + this.state.form.id).then(response => {
-      this.setState({ modalEliminar: false });
-      this.peticionGet();
-    })
-  }
- */
+  const [DataDC, setDataDC] = useState([]);
 
+  const [modalEliminar, setModaleliminar] = useState(false);
+  const abrirModaleliminar = () => {
+    setModaleliminar(true);
+  };
 
+  const peticionDelete = () => {
+    console.log(urlcd + "/" + DataDC);
+    axios.delete(urlcd + "/" + DataDC).then((response) => {
+      setModaleliminar(false);
+      peticionGet();
+    });
+  };
+
+  /////////////select categorias//////////////////////////////////
+  const [datacategorias, setDatacategorias] = useState([]);
+
+  const peticionGetcategorias = async () => {
+    await axios.get(urlcategorias).then((response) => {
+      setDatacategorias(response.data);
+      console.log(datacategorias);
+    });
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    await peticionGetcategorias();
+    // eslint-disable-next-line
+  }, []);
+
+  //////////////select tipo categorias///////////////////////////
+  const [dataTipocategorias, setDatatipocategorias] = useState([]);
+
+  const peticionGettc = () => {
+    console.log(urltipocategorias + datosSeleccionados.idcategoria);
+    axios
+      .get(urltipocategorias + datosSeleccionados.idcategoria)
+      .then((response) => {
+        setDatatipocategorias(response.data);
+        console.log(response.data);
+      });
+  };
+  //////////////select subcategorias///////////////////////////
+  const [dataSubcategorias, setDatasubcategorias] = useState([]);
+
+  const peticionGetsc = () => {
+    console.log(urlsubcategorias + datosSeleccionados.idtipocategoria);
+    axios
+      .get(urlsubcategorias + datosSeleccionados.idtipocategoria)
+      .then((response) => {
+        setDatasubcategorias(response.data);
+        console.log(response.data);
+      });
+  };
+
+  /////////////Mostrar articulos filtro//////////////////////////////////
+  const [dataarticulosF, setDataarticulosF] = useState([]);
+
+  const peticionGetartF = async () => {
+    await axios.post(urlartfiltro, datosSeleccionados).then((response) => {
+      setDataarticulosF(response.data);
+      console.log(response.data);
+    });
+  };
+  console.log(DataDC);
   return (
     <div>
       <div className="DetallesCompras">
         <Sidebar>
           <Card>
             <Card.Header className="bg-dark text-white" as="h3">
-              <div className='row'>
-                <div className='col-md-6'>
-                  Detalles de la compra
-                </div>
-                <div className='col-md-6'>
+              <div className="row">
+                <div className="col-md-6">Detalles de la compra</div>
+                <div className="col-md-6">
                   <div className="text-right">
-                    <button type="button" className="btn btn-warning"
-                      onClick={() => abrirModalcompra()}>
+                    <button
+                      type="button"
+                      className="btn btn-warning"
+                      onClick={() => abrirModalcompra()}
+                    >
                       <FaIcons.FaEye /> Ver compra
                     </button>
                   </div>
@@ -73,41 +190,57 @@ const DetallesCompras = () => {
                     <Col xs={4} md={4}>
                       <div className="form-group">
                         <label>Elegir Categoria</label>
-                        <select className='form-control' name='idtipo_proveedor' id="idtipo_proveedor"
-                          /* onChange={handleChange} */>
+                        <select
+                          className="form-control"
+                          name="idcategoria"
+                          id="setcategoria"
+                          onChange={handleChange}
+                          onClick={() => peticionGettc()}
+                        >
                           <option value={0}>Seleccione una opcion</option>
-                          {/* {
-                              datatp.map(tproveedor => (
-                                <option value={tproveedor.id}>{tproveedor.nombre} </option>
-                              ))
-
-                            }
- */}
+                          {datacategorias.map((categorias) => (
+                            <option key={categorias.id} value={categorias.id}>
+                              {categorias.nombre}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </Col>
                     <Col xs={4} md={4}>
                       <div className="form-group">
-                        <label>Elegir tipo categoria</label>
-                        <input
+                        <label>Elegir Tipo de categoria</label>
+                        <select
                           className="form-control"
-                          type="text"
-                          name="nif"
-                          required=""
-                        /*   onChange={handleChange} */
-                        />
+                          name="idtipocategoria"
+                          id="settipocategoria"
+                          onChange={handleChange}
+                          onClick={() => peticionGetsc()}
+                        >
+                          <option value={0}>Seleccione una opcion</option>
+                          {dataTipocategorias.map((tcategorias) => (
+                            <option key={tcategorias.id} value={tcategorias.id}>
+                              {tcategorias.nombre}{" "}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </Col>
                     <Col xs={4} md={4}>
                       <div className="form-group">
                         <label>Elegir subcategoria</label>
-                        <input
+                        <select
                           className="form-control"
-                          type="text"
-                          name="nombre"
-                          required=""
-                        /*  onChange={handleChange} */
-                        />
+                          name="idsubcategoria"
+                          id="settipocategoria"
+                          onChange={handleChange}
+                        >
+                          <option value={0}>Seleccione una opcion</option>
+                          {dataSubcategorias.map((subcategorias) => (
+                            <option value={subcategorias.id}>
+                              {subcategorias.nombre}{" "}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </Col>
                   </Row>
@@ -115,16 +248,19 @@ const DetallesCompras = () => {
                     <Col xs={4} md={4}>
                       <div className="form-group">
                         <label>Elegir Articulo</label>
-                        <select className='form-control' name='idtipo_proveedor' id="idtipo_proveedor"
-                          /* onChange={handleChange} */>
-                          <option value={0}>Seleccione una opcion</option>
-                          {/* {
-                              datatp.map(tproveedor => (
-                                <option value={tproveedor.id}>{tproveedor.nombre} </option>
-                              ))
-
-                            }
- */}
+                        <select
+                          className="form-control"
+                          name="idarticulo"
+                          id="idarticulo"
+                          onChange={handleChange}
+                          onClick={() => peticionGetartF()}
+                        >
+                          <option value={0}>Seleccione una articulo</option>
+                          {dataarticulosF.map((articulos) => (
+                            <option key={articulos.id} value={articulos.id}>
+                              {articulos.nombre}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </Col>
@@ -134,9 +270,8 @@ const DetallesCompras = () => {
                         <input
                           className="form-control"
                           type="number"
-                          name="nif"
-                          required=""
-                        /*   onChange={handleChange} */
+                          name="cantidad"
+                          onChange={handleChange}
                         />
                       </div>
                     </Col>
@@ -146,15 +281,16 @@ const DetallesCompras = () => {
                         <input
                           className="form-control"
                           type="number"
-                          name="nombre"
-                          required=""
-                        /*  onChange={handleChange} */
+                          name="costo"
+                          onChange={handleChange}
                         />
                       </div>
                     </Col>
                   </Row>
-                  <button className="btn btn-success"
-                    /* onClick={() => peticionPost()} */>
+                  <button
+                    className="btn btn-success"
+                    onClick={() => peticionPost()}
+                  >
                     <FaIcons.FaPlusCircle /> Agregar
                   </button>
                 </Card.Text>
@@ -171,23 +307,29 @@ const DetallesCompras = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map(dcompras => {
+                    {data.map((dcompras) => {
                       return (
                         <tr>
                           <td>{dcompras.id}</td>
-                          <td>{dcompras.nombre}</td>
-                          <td>{dcompras.Status}</td>
-                          <td>{dcompras.Status}</td>
-                          <td>{dcompras.Status}</td>
-                          <td>{dcompras.Status}</td>
+                          <td>{dcompras.nombre_articulo}</td>
+                          <td>{dcompras.cantidad}</td>
+                          <td>{dcompras.costo}</td>
+                          <td>{dcompras.total}</td>
+                          <td>{dcompras.status}</td>
                           <td>
-                            <button type="button" className="btn btn-dark"
-                              onClick={() => { this.seleccionarEmpresa(dcompras); this.setState({ modalEliminar: true }) }}>
-                              <FaIcons.FaTrash />  Eliminar
+                            <button
+                              type="button"
+                              className="btn btn-dark"
+                              onClick={() => {
+                                setDataDC(dcompras.id);
+                                abrirModaleliminar();
+                              }}
+                            >
+                              <FaIcons.FaTrash /> Eliminar
                             </button>
                           </td>
                         </tr>
-                      )
+                      );
                     })}
                     <tr>
                       <th colspan="3"></th>
@@ -203,11 +345,11 @@ const DetallesCompras = () => {
                   </tbody>
                 </table>
 
-
-
-                <Modal isOpen={modalcompra}
+                <Modal
+                  isOpen={modalcompra}
                   size="lg"
-                  aria-labelledby="contained-modal-title-vcenter">
+                  aria-labelledby="contained-modal-title-vcenter"
+                >
                   <ModalHeader>
                     <div>
                       <h4>Informacion de la compra</h4>
@@ -223,9 +365,8 @@ const DetallesCompras = () => {
                               className="form-control"
                               readOnly
                               type="text"
-                              name="nif"
-                              required=""
-                              value={2}
+                              name="codigo"
+                              value={datacompra.id}
                             />
                           </div>
                         </Col>
@@ -236,8 +377,8 @@ const DetallesCompras = () => {
                               className="form-control"
                               readOnly
                               type="text"
-                              name="nif"
-                              required=""
+                              name="proveedor"
+                              value={datacompra.proveedor}
                             />
                           </div>
                         </Col>
@@ -247,9 +388,9 @@ const DetallesCompras = () => {
                             <input
                               className="form-control"
                               readOnly
-                              type="text"
-                              name="nombre"
-                              required=""
+                              type="date"
+                              name="fecha"
+                              value={datacompra.fecha}
                             />
                           </div>
                         </Col>
@@ -262,8 +403,8 @@ const DetallesCompras = () => {
                               className="form-control"
                               readOnly
                               type="text"
-                              name="representante"
-                              required=""
+                              name="tipocompra"
+                              value={datacompra.tipocompra}
                             />
                           </div>
                         </Col>
@@ -274,8 +415,8 @@ const DetallesCompras = () => {
                               className="form-control"
                               readOnly
                               type="text"
-                              name="correo"
-                              required=""
+                              name="almacen"
+                              value={datacompra.almacen}
                             />
                           </div>
                         </Col>
@@ -286,8 +427,8 @@ const DetallesCompras = () => {
                               className="form-control"
                               readOnly
                               type="text"
-                              name="telefono"
-                              required=""
+                              name="ubialmacen"
+                              value={datacompra.ubicalmacen}
                             />
                           </div>
                         </Col>
@@ -300,12 +441,11 @@ const DetallesCompras = () => {
                               className="form-control"
                               readOnly
                               type="text"
-                              name="direccion"
-                              required=""
+                              name="status"
+                              value={datacompra.status}
                             />
                           </div>
                         </Col>
-
                       </Row>
                     </Container>
                   </ModalBody>
@@ -318,24 +458,38 @@ const DetallesCompras = () => {
                     </button>
                   </ModalFooter>
                 </Modal>
-
-
-                {/*   <Modal isOpen={this.state.modalEliminar}>
-                    <ModalBody>
-                      Estás seguro que deseas eliminar a la empresa  */}{/* {nombre} */}
-                {/*  </ModalBody>
-                    <ModalFooter>
-                      <button className="btn btn-danger" onClick={() => this.peticionDelete()}>Sí</button>
-                      <button className="btn btn-secundary" onClick={() => this.setState({ modalEliminar: false })}>No</button>
-                    </ModalFooter>
-                  </Modal> */}
+                <Modal isOpen={modalEliminar}
+                centered>
+                  <ModalHeader>
+                    <div>
+                      <h4>Eliminar Articulo de la compra #{datosSeleccionados.idcompra}</h4>
+                    </div>
+                  </ModalHeader>
+                  <ModalBody>
+                  <p>¿Estás seguro que deseas eliminar este articulo de la compra?</p>
+                    {DataDC.nombre}
+                  </ModalBody>
+                  <ModalFooter>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => peticionDelete()}
+                    >
+                      Eliminar
+                    </button>
+                    <button
+                      className="btn btn-dark"
+                      onClick={() => setModaleliminar(false)}
+                    >
+                      Cerrar
+                    </button>
+                  </ModalFooter>
+                </Modal>
               </Card.Text>
             </Card.Body>
           </Card>
         </Sidebar>
       </div>
     </div>
-
   );
 };
 
