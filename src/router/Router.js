@@ -27,6 +27,7 @@ import Page404 from "../components/page404";
 import Exitoso from "../views/Articulos/registroexitoso";
 import ArticulosEditar from "../views/Articulos/articulos_editar";
 import ArticuloActualizado from "../views/Articulos/ArtActualizado";
+import DetallesCompras from "../views/Compras/detallescompras";
 
 const Router = () => {
   return (
@@ -46,6 +47,7 @@ const Router = () => {
           <Route path="/compras/tipoproveedores" element={<TipoProveedores/>} />
           <Route path="/compras/proveedores" element={<Proveedores />}/>
           <Route path="/compras/importaciones" element={<Importaciones/>} />
+          <Route path="/compras/detalles/:idcompra" element={<DetallesCompras/>} />
           <Route path="/compras" element={<Compras/>} />
           <Route path="/almacen/ubicacionalmacen" element={<UbicacionAlmacen/>} />
           <Route path="/almacen/tipoalmacen" element={<TipoAlmacen />}/>
