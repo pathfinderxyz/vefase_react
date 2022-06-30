@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import './../../assets/css/gcmenu.css';
 import Sidebar from "../../components/sidebar";
 import Card from "react-bootstrap/Card";
 import DataTable from 'react-data-table-component';
@@ -7,12 +8,16 @@ import * as FaIcons from "react-icons/fa";
 import Cargando from "../../components/cargando";
 import { Modal, Col, Container, Row, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Link } from "react-router-dom";
 
 const url = "https://api.vefase.com/public/compras";
 const urlpro = "https://api.vefase.com/public/proveedores";
 const urlalmacen = "https://api.vefase.com/public/almacen";
 const urlubialmacen = "https://api.vefase.com/public/almacen/xubi";
 const urlimporta = "https://api.vefase.com/public/importaciones";
+
 
 const Compras = () => {
 
@@ -59,6 +64,17 @@ const Compras = () => {
 
   const columns = [
     {
+      name: 'Accion',
+      button: true,
+      cell: (row) =>
+      <Nav>
+         <NavDropdown id="nav-dropdown-dark-example" title={<FaIcons.FaRegSun/>} className="stylenav">
+             <NavDropdown.Item onClick={() => { setDatosSeleccionados(row); abrirModalEditar() }} >Editar</NavDropdown.Item>
+             <NavDropdown.Item><Link to={"/compras/report/"+row.id}>Detalles compras </Link></NavDropdown.Item>                    
+         </NavDropdown>
+      </Nav>
+    },
+    {
       name: 'Id',
       selector: (row) => row.id,
       defaultSortAsc: true,
@@ -95,22 +111,8 @@ const Compras = () => {
     {
       name: 'status',
       selector: (row) => row.status,
-    },
-    {
-      name: 'Accion',
-      button: true,
-      cell: (row) =>
-        <button className="btn btn-dark"
-          onClick={() => { setDatosSeleccionados(row); abrirModalEditar() }} >
-          <FaIcons.FaPencilAlt />
-        </button>
-        /*  <Nav>
-         <NavDropdown id="nav-dropdown-dark-example" title={<FaIcons.FaRegSun/>}>
-             <NavDropdown.Item>Usuarios</NavDropdown.Item>
-             <NavDropdown.Item>Perfiles</NavDropdown.Item>                     
-         </NavDropdown>
-         </Nav> */,
     }
+   
   ];
   /////////////Buscar datos//////////////////////////////////
   const [buscar, setBuscar] = useState("");
@@ -459,8 +461,10 @@ const Compras = () => {
                       <div className="form-group">
                         <label>Status</label>
                         <select className='form-control' value={datosSeleccionados.status} name='status' id="status" onChange={handleChange}>
-                          <option value={'ACTIVO'}>ACTIVO</option>
-                          <option value={'INACTIVO'}>INACTIVO</option>
+                          <option value={'PENDIENTE'}>PENDIENTE</option>
+                          <option value={'PROCESADO'}>PROCESADO</option>
+                          <option value={'REALIZADO'}>REALIZADO</option>
+                          <option value={'ELIMINADO'}>ELIMINADO</option>
                         </select>
                       </div>
                     </Col>

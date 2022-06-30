@@ -1,0 +1,14 @@
+.stylenav{
+    color: #fff;
+    font-size: 15px;
+    background: #343a40;
+    border-radius: 5px;
+}
+
+a {
+    color: #2c2725;
+}
+
+a :hover {
+    color: #2c2725;
+}

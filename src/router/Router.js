@@ -28,6 +28,7 @@ import Exitoso from "../views/Articulos/registroexitoso";
 import ArticulosEditar from "../views/Articulos/articulos_editar";
 import ArticuloActualizado from "../views/Articulos/ArtActualizado";
 import DetallesCompras from "../views/Compras/detallescompras";
+import ReportCompra from "../views/Compras/reportcompra";
 
 const Router = () => {
   return (
@@ -44,6 +45,7 @@ const Router = () => {
           <Route path="/inventario/colores" element={<Colores/>} />
           <Route path="/inventario/unidades" element={<Unidades />}/>
           <Route path="/inventario" element={<ControlInventario/>} />
+          <Route path="/compras/report/:idcompra" element={<ReportCompra/>} />
           <Route path="/compras/tipoproveedores" element={<TipoProveedores/>} />
           <Route path="/compras/proveedores" element={<Proveedores />}/>
           <Route path="/compras/importaciones" element={<Importaciones/>} />

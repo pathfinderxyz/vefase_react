@@ -23,12 +23,14 @@ const urltipocategorias =
 const urlsubcategorias =
   "https://api.vefase.com/public/articulos/subcategorias/";
 const urlartfiltro = "https://api.vefase.com/public/articulos/filtro";
+const urldcsuma = "https://api.vefase.com/public/compras/detalles/sum";
 
 const DetallesCompras = () => {
   let { idcompra } = useParams();
   console.log(idcompra);
 
   const [data, setData] = useState([]);
+ /*  const [Boton, setBoton] = useState(false); */
 
   /////////////Mostrar datos de los articulos de cada compra//////////////////////////////////
   const peticionGet = async () => {
@@ -89,6 +91,7 @@ const DetallesCompras = () => {
     console.log(datosSeleccionados);
     await axios.post(urlcd, datosSeleccionados).then((res) => {
       peticionGet();
+      peticionGetSum();
       console.log(res.status);
     });
   };
@@ -106,9 +109,23 @@ const DetallesCompras = () => {
     axios.delete(urlcd + "/" + DataDC).then((response) => {
       setModaleliminar(false);
       peticionGet();
+      peticionGetSum();
     });
   };
 
+   //////////////cerrar compra/////////////////////////////////////
+   const [modalEditar, setModalEditar] = useState(false);
+   const abrirModalEditar = () => {
+     console.log(datosSeleccionados);
+     setModalEditar(true);
+   }
+ 
+   const peticionPut = async () => {
+     await axios.put(urlcd+'/'+idcompra, datosSeleccionados).then(response => {
+       peticionGet();
+       setModalEditar(false);
+     })
+   }
   /////////////select categorias//////////////////////////////////
   const [datacategorias, setDatacategorias] = useState([]);
 
@@ -160,6 +177,21 @@ const DetallesCompras = () => {
     });
   };
   console.log(DataDC);
+
+  ///////////////Suma total//////////////////////////////////
+  const [dataTotal, setDataTotal] = useState([]);
+
+  const peticionGetSum = async () => {
+    await axios.get(urldcsuma+'/'+idcompra).then((response) => {
+      setDataTotal(response.data[0]);
+    });
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    await peticionGetSum();
+    // eslint-disable-next-line
+  }, []);
+  ////////////////////////////////////////////////////////
   return (
     <div>
       <div className="DetallesCompras">
@@ -167,7 +199,7 @@ const DetallesCompras = () => {
           <Card>
             <Card.Header className="bg-dark text-white" as="h3">
               <div className="row">
-                <div className="col-md-6">Detalles de la compra</div>
+                <div className="col-md-6">Detalles de la compra #{idcompra}</div>
                 <div className="col-md-6">
                   <div className="text-right">
                     <button
@@ -308,6 +340,11 @@ const DetallesCompras = () => {
                   </thead>
                   <tbody>
                     {data.map((dcompras) => {
+                     /*  if (dcompras.status==='PROCESADO'){
+                          setBoton(true);
+                      }else{
+                          setBoton(false);
+                      }     */         
                       return (
                         <tr>
                           <td>{dcompras.id}</td>
@@ -319,6 +356,7 @@ const DetallesCompras = () => {
                           <td>
                             <button
                               type="button"
+                             /*  disabled={Boton} */
                               className="btn btn-dark"
                               onClick={() => {
                                 setDataDC(dcompras.id);
@@ -334,10 +372,11 @@ const DetallesCompras = () => {
                     <tr>
                       <th colspan="3"></th>
                       <th>Total</th>
-                      <th></th>
+                      <th><p>{dataTotal.total}</p></th>
                       <th></th>
                       <th>
-                        <button type="button" className="btn btn-success">
+                        <button type="button" className="btn btn-success"
+                        onClick={() => abrirModalEditar()}>
                           <FaIcons.FaSave /> Guardar
                         </button>
                       </th>
@@ -479,6 +518,32 @@ const DetallesCompras = () => {
                     <button
                       className="btn btn-dark"
                       onClick={() => setModaleliminar(false)}
+                    >
+                      Cerrar
+                    </button>
+                  </ModalFooter>
+                </Modal>
+                <Modal isOpen={modalEditar}
+                centered>
+                  <ModalHeader>
+                    <div>
+                      <h4>Guardar compra #{datosSeleccionados.idcompra}</h4>
+                    </div>
+                  </ModalHeader>
+                  <ModalBody>
+                  <p>¿Estás seguro que desea guardar esta compra con los articulos de la lista?</p>
+                    {DataDC.nombre}
+                  </ModalBody>
+                  <ModalFooter>
+                    <button
+                      className="btn btn-success"
+                      onClick={() => peticionPut()}
+                    >
+                      Guardar
+                    </button>
+                    <button
+                      className="btn btn-dark"
+                      onClick={() => setModalEditar(false)}
                     >
                       Cerrar
                     </button>
