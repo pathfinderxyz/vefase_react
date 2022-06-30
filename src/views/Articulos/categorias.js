@@ -157,8 +157,8 @@ const Categorias = () => {
                 </div>
                 <div className='col-md-6'>
                   <div className="text-right">
-                    <button type="button" className="btn btn-success" onClick={() => abrirModalInsertar()}>
-                      <i className="ti-plus"></i> Añadir  Categorias
+                    <button type="button" className="btn btn-warning text-dark" onClick={() => abrirModalInsertar()}>
+                    <FaIcons.FaPlus/> Añadir  Categorias
                     </button>
                   </div>
                 </div>

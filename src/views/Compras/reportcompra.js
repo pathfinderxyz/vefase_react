@@ -6,6 +6,7 @@ import axios from 'axios';
 import * as FaIcons from "react-icons/fa";
 import Cargando from "../../components/cargando";
 import { Link, useParams } from "react-router-dom";
+import Badge from 'react-bootstrap/Badge';
 
 const url = "https://api.vefase.com/public/compras/detallesxcompra";
 const urldcsuma = "https://api.vefase.com/public/compras/detalles/sum";
@@ -64,7 +65,8 @@ const ReportCompra = () => {
     },
     {
         name: 'Status',
-        selector: (row) => row.status,
+        selector: (row) =>
+        <Badge bg={status[row.status]} text="light">{row.status}</Badge>
     }
   ];
   /////////////Buscar datos//////////////////////////////////
@@ -107,6 +109,14 @@ const ReportCompra = () => {
     await peticionGetSum();
     // eslint-disable-next-line
   }, []);
+   ////////////////badge///////////////////
+  
+   let status={
+    'PENDIENTE':"warning",
+    'PROCESADO':"success",
+    'REALIZADO':"primary",
+    'ELIMINADO':"danger",
+  }
 
   /////////////////////////////////////////////////////////////////
   return (
@@ -121,8 +131,8 @@ const ReportCompra = () => {
                 </div>
                 <div className='col-md-6'>
                   <div className="text-right">
-                    <Link type="button" className="btn btn-warning" to={"/compras/detalles/"+idcompra}>
-                    <FaIcons.FaPencilAlt /> Seguir Editando
+                    <Link type="button" className="btn btn-warning text-dark" to={"/compras/detalles/"+idcompra}>
+                    <FaIcons.FaPlus/> Seguir Editando
                     </Link>
                   </div>
                 </div>

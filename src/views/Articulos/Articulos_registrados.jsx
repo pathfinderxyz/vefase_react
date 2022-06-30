@@ -108,8 +108,8 @@ const  ArticulosRegistrados= () => {
                 </div>
                 <div className='col-md-6'>
                   <div className="text-right">
-                    <Link type="button" className="btn btn-success" to="/articulos/registrar">
-                      <i className="ti-plus"></i> Registrar articulos
+                    <Link type="button" className="btn btn-warning text-dark" to="/articulos/registrar">
+                    <FaIcons.FaPlus/> Registrar articulos
                     </Link>
                   </div>
                 </div>

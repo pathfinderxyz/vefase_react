@@ -194,10 +194,10 @@ const Usuarios = () => {
                   <div className="text-right">
                     <button
                       type="button"
-                      className="btn btn-success"
+                      className="btn btn-warning text-dark"
                       onClick={() => abrirModalInsertar()}
                     >
-                      <i className="ti-plus"></i> Añadir Usuarios
+                      <FaIcons.FaPlus/> Añadir Usuarios
                     </button>
                   </div>
                 </div>

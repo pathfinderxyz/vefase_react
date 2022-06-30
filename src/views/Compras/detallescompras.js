@@ -4,7 +4,7 @@ import axios from "axios";
 import Sidebar from "../../components/sidebar";
 import Card from "react-bootstrap/Card";
 import * as FaIcons from "react-icons/fa";
-import Badge from 'react-bootstrap/Badge'
+import Badge from 'react-bootstrap/Badge';
 import { useParams } from "react-router-dom";
 import {
   Modal,
@@ -223,7 +223,7 @@ const DetallesCompras = () => {
                     <div className="text-right">
                       <button
                         type="button"
-                        className="btn btn-warning"
+                        className="btn btn-warning text-dark"
                         onClick={() => abrirModalcompra()}
                       >
                         <FaIcons.FaEye /> Ver compra

@@ -196,8 +196,8 @@ const UbicacionAlmacen = () => {
                 </div>
                 <div className='col-md-6'>
                   <div className="text-right">
-                    <button type="button" className="btn btn-success" onClick={() => abrirModalInsertar()}>
-                      <i className="ti-plus"></i> Añadir ubicacion de Almacen
+                    <button type="button" className="btn btn-warning text-dark" onClick={() => abrirModalInsertar()}>
+                    <FaIcons.FaPlus/> Añadir ubicacion de Almacen
                     </button>
                   </div>
                 </div>
