@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from "react-router-dom";
+import Badge from 'react-bootstrap/Badge';
 
 const url = "https://api.vefase.com/public/compras";
 const urlpro = "https://api.vefase.com/public/proveedores";
@@ -110,7 +111,8 @@ const Compras = () => {
     },
     {
       name: 'status',
-      selector: (row) => row.status,
+      selector: (row) =>
+      <Badge bg={status[row.status]} text="light">{row.status}</Badge>
     }
    
   ];
@@ -261,6 +263,16 @@ const Compras = () => {
     await peticionGetimport();
     // eslint-disable-next-line 
   }, []);
+
+  ////////////////badge///////////////////
+  
+  let status={
+    'PENDIENTE':"warning",
+    'PROCESADO':"success",
+    'REALIZADO':"dark",
+    'ELIMINADO':"danger",
+  }
+
 
   /////////////////////////////////////////////////////////////////
   return (

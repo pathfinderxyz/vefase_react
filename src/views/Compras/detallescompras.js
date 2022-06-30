@@ -4,6 +4,7 @@ import axios from "axios";
 import Sidebar from "../../components/sidebar";
 import Card from "react-bootstrap/Card";
 import * as FaIcons from "react-icons/fa";
+import Badge from 'react-bootstrap/Badge'
 import { useParams } from "react-router-dom";
 import {
   Modal,
@@ -193,9 +194,22 @@ const DetallesCompras = () => {
     await peticionGetSum();
     // eslint-disable-next-line
   }, []);
+
+  ////////////////badge///////////////////
+  
+  let status={
+    'PENDIENTE':"warning",
+    'PROCESADO':"success",
+    'REALIZADO':"primary",
+    'ELIMINADO':"danger",
+  }
+
+  console.log(status['PENDIENTE']);
+
+
   ////////////////////////////////////////////////////////
   if (data.length > 0) {
-    return (
+     return (
       <div>
         <div className="DetallesCompras">
           <Sidebar>
@@ -357,7 +371,7 @@ const DetallesCompras = () => {
                             <td>{dcompras.cantidad}</td>
                             <td>{dcompras.costo}</td>
                             <td>{dcompras.total}</td>
-                            <td>{dcompras.status}</td>
+                            <td><Badge bg={status[dcompras.status]} text="light">{dcompras.status}</Badge>{' '}</td>
                             <td>
                               <button
                                 type="button"
@@ -580,7 +594,7 @@ const DetallesCompras = () => {
       <Sidebar>
         <Card>
           <Card.Header className="bg-dark text-white" as="h3">
-            Error 404
+            Detalles de la compra
           </Card.Header>
           <Card.Body>
             <Card.Title>La compra no existe</Card.Title>
