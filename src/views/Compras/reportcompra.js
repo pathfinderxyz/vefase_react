@@ -132,7 +132,7 @@ const ReportCompra = () => {
                 <div className='col-md-6'>
                   <div className="text-right">
                     <Link type="button" className="btn btn-warning text-dark" to={"/compras/detalles/"+idcompra}>
-                    <FaIcons.FaPlus/> Seguir Editando
+                    <FaIcons.FaPencilAlt/> Seguir Editando
                     </Link>
                   </div>
                 </div>

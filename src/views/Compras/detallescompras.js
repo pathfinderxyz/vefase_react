@@ -52,15 +52,19 @@ const DetallesCompras = () => {
   const [modalcompra, setModalcompra] = useState(false);
   const abrirModalcompra = () => {
     setModalcompra(true);
-    peticionGetcompras();
   };
 
   const peticionGetcompras = async () => {
     await axios.get(urlcd + "/" + idcompra).then((response) => {
       setDatacompra(response.data[0]);
-      console.log(datacompra);
     });
   };
+
+  console.log(datacompra);
+
+  useEffect(async () => {
+    await peticionGetcompras();
+  }, []);
 
   //////////////Recibiendo data de los input//////////////////////////
   const [datosSeleccionados, setDatosSeleccionados] = useState({
@@ -204,11 +208,9 @@ const DetallesCompras = () => {
     'ELIMINADO':"danger",
   }
 
-  console.log(status['PENDIENTE']);
-
 
   ////////////////////////////////////////////////////////
-  if (data.length > 0) {
+  if (datacompra) {
      return (
       <div>
         <div className="DetallesCompras">

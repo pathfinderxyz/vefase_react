@@ -45,10 +45,16 @@ const ArticulosRegistrar = () => {
 
   }
 
+  const validardatos=()=>{
+    if (datosSeleccionados.nombre!==''){
+      peticionPost();
+    }else{
+      setError(true);
+    }
+  }
+
   const [Error, setError] = useState(false);
   const [Exitoso, setExitoso] = useState(false);
-
-
 
   const peticionPost = async () => {
     delete datosSeleccionados.id;
@@ -146,7 +152,7 @@ const ArticulosRegistrar = () => {
               {
                 Error &&
                 <div className="alert alert-danger">
-                  {<strong>Error: Un articulo con ese nombre ya existe! intente con otro nombre.</strong>}
+                  {<strong>Error: Los campos estan vacios o un articulo con ese nombre ya existe! intente nuevamente</strong>}
                 </div>
               }
               {
@@ -262,7 +268,7 @@ const ArticulosRegistrar = () => {
              
 
               <button className="btn btn-success"
-                   onClick={() => peticionPost()}>
+                   onClick={() => validardatos()}>
                 Guardar articulo
               </button>
 

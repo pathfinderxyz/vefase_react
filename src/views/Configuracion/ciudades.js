@@ -110,6 +110,14 @@ const Ciudades = () => {
 
   const [Error, setError] = useState(false); 
 
+  const validardatos=()=>{
+      if (ciudadSeleccionada.nombre!==''){
+        peticionPost();
+      }else{
+        setError(true);
+      }
+  }
+
   const peticionPost = async () => {
     delete ciudadSeleccionada.id;
     console.log(ciudadSeleccionada);
@@ -185,7 +193,7 @@ const Ciudades = () => {
               {
                    Error &&
                    <div className="alert alert-danger">
-                      {<strong>Error: El nombre ya existe! intente con otro nombre.</strong>}
+                      {<strong>Error: El campo esta vacio o el nombre ya existe! intente nuevamente.</strong>}
                    </div>
                }
               <p>Ciudades registradas en el sistema.</p>
@@ -249,7 +257,7 @@ const Ciudades = () => {
                     Cancelar
                   </button>
                   <button className="btn btn-success"
-                    onClick={() => peticionPost()}>
+                    onClick={() => validardatos()}>
                     Insertar
                   </button>
 

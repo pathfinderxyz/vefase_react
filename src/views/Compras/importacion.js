@@ -52,10 +52,6 @@ const Importaciones = () => {
       sortable: true,
     },
     {
-      name: 'idcompra',
-      selector: (row) => row.idcompra,
-    },
-    {
       name: 'Detalles',
       selector: (row) => row.detalles,
     },

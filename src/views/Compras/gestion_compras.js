@@ -161,10 +161,19 @@ const Compras = () => {
 
   }
 
+  const validardatos=()=>{
+    if (datosSeleccionados.proveedor!==''){
+      peticionPost();
+    }else{
+      setError(true);
+    }
+  }
+
   const [Error, setError] = useState(false);
 
   const peticionPost = async () => {
     delete datosSeleccionados.id;
+    console.log(url, datosSeleccionados);
     await axios.post(url, datosSeleccionados).then(resp => {
       setError(false);
       setModalInsertar(false);
@@ -299,7 +308,7 @@ const Compras = () => {
               {
                 Error &&
                 <div className="alert alert-danger">
-                  {<strong>Error: El nombre ya existe o el campo esta vacio!</strong>}
+                  {<strong>Error: Los campos estan vacios!</strong>}
                 </div>
               }
               <p> Compras registradas en el sistema.</p>
@@ -436,7 +445,7 @@ const Compras = () => {
                     Cancelar
                   </button>
                   <button className="btn btn-success"
-                    onClick={() => peticionPost()}>
+                    onClick={() => validardatos()}>
                     Insertar
                   </button>
 
@@ -505,7 +514,7 @@ const Compras = () => {
                       <div className="form-group">
                         <label>Elegir Ubicacion Almacen</label>
                         <select className='form-control' value={datosSeleccionados.idubicalmacen} name='idubicalmacen' id="idubicalmacen" onChange={handleChange}>
-                          <option value={0}>Seleccione una opcion</option>
+                          <option value={datosSeleccionados.idubicalmacen}>{datosSeleccionados.ubicalmacen}</option>
                           {
                             dataubialma.map(ubialma => (
                               <option value={ubialma.id}>{ubialma.nombre} </option>
