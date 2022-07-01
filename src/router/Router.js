@@ -29,6 +29,8 @@ import ArticulosEditar from "../views/Articulos/articulos_editar";
 import ArticuloActualizado from "../views/Articulos/ArtActualizado";
 import DetallesCompras from "../views/Compras/detallescompras";
 import ReportCompra from "../views/Compras/reportcompra";
+import DetallesControl from "../views/Inventario/detallescontrol";
+import InventarioDetalles from "../views/Inventario/inventariodetalles";
 
 const Router = () => {
   return (
@@ -44,6 +46,8 @@ const Router = () => {
           <Route path="/paises" element={<Paises/>} />
           <Route path="/inventario/colores" element={<Colores/>} />
           <Route path="/inventario/unidades" element={<Unidades />}/>
+          <Route path="/inventario/control/detalles/:idcontrol" element={<InventarioDetalles/>} />
+          <Route path="/inventario/control/:id" element={<DetallesControl/>} />
           <Route path="/inventario" element={<ControlInventario/>} />
           <Route path="/compras/report/:idcompra" element={<ReportCompra/>} />
           <Route path="/compras/tipoproveedores" element={<TipoProveedores/>} />

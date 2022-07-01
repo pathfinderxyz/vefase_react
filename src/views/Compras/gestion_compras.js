@@ -315,6 +315,7 @@ const Compras = () => {
               <DataTable
                 columns={columns}
                 data={filtrobuscar}
+                noDataComponent="No hay datos registrados en estos momentos"
                 progressPending={pending}
                 progressComponent={<Cargando />}
                 pagination

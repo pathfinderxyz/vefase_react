@@ -8,12 +8,11 @@ import Cargando from "../../components/cargando";
 import { Link, useParams } from "react-router-dom";
 import Badge from 'react-bootstrap/Badge';
 
-const url = "https://api.vefase.com/public/compras/detallesxcompra";
-const urldcsuma = "https://api.vefase.com/public/compras/detalles/sum";
+const url = "https://api.vefase.com/public/inventario/detallesxcontrol";
 
-const ReportCompra = () => {
-  let { idcompra } = useParams();
-  console.log(idcompra);
+const DetallesControl = () => {
+  let { id } = useParams();
+  console.log(id);
 
   //////////////Iniciando Status data//////////////////////////
   const [data, setData] = useState([]);
@@ -38,30 +37,30 @@ const ReportCompra = () => {
 
   const columns = [
     {
-      name: 'Codigo',
+      name: 'Codigo Inv',
       selector: (row) => row.id,
       defaultSortAsc: true,
       sortable: true,
     },
     {
-      name: 'Codigo compra',
-      selector: (row) => row.idcompra,
+      name: 'Codigo',
+      selector: (row) => row.codigo,
+    },
+    {
+      name: 'Serial',
+      selector: (row) => row.serialc,
+    },
+    {
+      name: 'Color',
+      selector: (row) => row.color,
     },
     {
       name: 'Articulo',
-      selector: (row) => row.nombre_articulo,
+      selector: (row) => row.id_articulo,
     },
     {
-      name: 'Cantidad',
-      selector: (row) => row.cantidad,
-    },
-    {
-      name: 'Costo',
-      selector: (row) => row.costo,
-    },
-    {
-        name: 'Total',
-        selector: (row) => row.total,
+        name: 'Stock',
+        selector: (row) => row.stock,
     },
     {
         name: 'Status',
@@ -75,7 +74,7 @@ const ReportCompra = () => {
 
   useEffect(() => {
     const result = data.filter((resultdata) => {
-      return resultdata.nombre_articulo.toLowerCase().match(buscar.toLowerCase());
+      return resultdata.status.toLowerCase().match(buscar.toLowerCase());
     });
     setFiltroBuscar(result);
   }, [buscar, data]);
@@ -84,7 +83,7 @@ const ReportCompra = () => {
 
   /////////////Mostrar datos//////////////////////////////////
   const peticionGet = async () => {
-    await axios.get(url+'/'+idcompra).then(response => {
+    await axios.get(url+'/'+id).then(response => {
       console.log(response.data);
       setData(response.data);
       setFiltroBuscar(response.data);
@@ -96,19 +95,7 @@ const ReportCompra = () => {
     await peticionGet();
   }, []);
 
-  ///////////////Suma total//////////////////////////////////
-  const [dataTotal, setDataTotal] = useState([]);
-
-  const peticionGetSum = async () => {
-    await axios.get(urldcsuma+'/'+idcompra).then((response) => {
-      setDataTotal(response.data[0]);
-    });
-  };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(async () => {
-    await peticionGetSum();
-    // eslint-disable-next-line
-  }, []);
+ 
    ////////////////badge///////////////////
   
    let status={
@@ -121,17 +108,17 @@ const ReportCompra = () => {
   /////////////////////////////////////////////////////////////////
   return (
     <div>
-      <div className="ReportCompra">
+      <div className="DetallesControl">
         <Sidebar>
           <Card>
             <Card.Header className="bg-dark text-white" as="h3">
               <div className='row'>
                 <div className='col-md-6'>
-                Detalles de la compra #{idcompra}
+                Detalles del control de inventario #{id}
                 </div>
                 <div className='col-md-6'>
                   <div className="text-right">
-                    <Link type="button" className="btn btn-warning text-dark" to={"/compras/detalles/"+idcompra}>
+                    <Link type="button" className="btn btn-warning text-dark" to={"/inventario/control/detalles/"+id}>
                     <FaIcons.FaPencilAlt/> Seguir Editando
                     </Link>
                   </div>
@@ -142,15 +129,13 @@ const ReportCompra = () => {
               <Card.Title>
               <div className='row'>
                 <div className='col-md-6'>
-                Informacion de la compra
+                Articulos registrados en el control de inventario
                 </div>
-                <div className='col-md-6'>
-                <p className="text-right">Total: {dataTotal.total}</p>
-                </div>
+                
                 </div>
                 </Card.Title>
              
-              <p>Estos son todos los articulos registrados en la compra</p>
+              <p>Estos son todos los articulos registrados en este control de inventario</p>
               <DataTable
                 columns={columns}
                 data={filtrobuscar}
@@ -178,4 +163,4 @@ const ReportCompra = () => {
   );
 };
 
-export default ReportCompra;
+export default DetallesControl;
