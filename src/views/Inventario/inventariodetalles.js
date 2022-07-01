@@ -4,7 +4,7 @@ import axios from "axios";
 import Sidebar from "../../components/sidebar";
 import Card from "react-bootstrap/Card";
 import * as FaIcons from "react-icons/fa";
-import Badge from 'react-bootstrap/Badge';
+import Badge from "react-bootstrap/Badge";
 import { useParams } from "react-router-dom";
 import {
   Modal,
@@ -18,15 +18,16 @@ import {
 
 const url = "https://api.vefase.com/public/inventario/detallesxcontrol"; ///////estos son los articulos del inventario ///////
 const urlcontroles = "https://api.vefase.com/public/inventario/control"; /////esta es el control unico/////////////
-const urlcategorias = "https://api.vefase.com/public/articulos/categorias";
-const urltipocategorias =
-  "https://api.vefase.com/public/articulos/tipocategorias/";
-const urlsubcategorias =
-  "https://api.vefase.com/public/articulos/subcategorias/";
-const urlartfiltro = "https://api.vefase.com/public/articulos/filtro";
-const urldcsuma = "https://api.vefase.com/public/compras/detalles/sum";
+const urlcolores = "https://api.vefase.com/public/colores";
+const urlalmacen = "https://api.vefase.com/public/almacen";
+const urltipoalmacen = "https://api.vefase.com/public/almacen/tipo/mostrar";
+const urlubialmacen = "https://api.vefase.com/public/almacen/tipo/ubicacion";
+const urlunidades = "https://api.vefase.com/public/unidades";
 
-const InventarioDetalles= () => {
+const urlartfiltro = "https://api.vefase.com/public/articulos/filtro";
+const urldcsuma = "https://api.vefase.com/public/inventario/detalles/sum";
+
+const InventarioDetalles = () => {
   let { idcontrol } = useParams();
   console.log(idcontrol);
 
@@ -66,28 +67,35 @@ const InventarioDetalles= () => {
 
   //////////////Recibiendo data de los input//////////////////////////
   const [datosSeleccionados, setDatosSeleccionados] = useState({
-    id: "",
-    idcontrol: idcontrol,
-    nombre: "",
-    cantidad: "",
-    costo: "",
-    categoria: "",
-    idcategoria: "",
-    idtipocategoria: "",
-    idsubcategoria: "",
-    status: "",
-    plan_cuentas: "",
+    id:'',
+    id_articulo:'',
+    nombre_articulo:'',
+    codigo:'',
+    serialc:'',
+    color:'',
+    idalmacen:'',
+    id_tipo_almacen:'',
+    ubialmacen:'',
+    cant_unidad:'',
+    cantidad:'',
+    cantidad_total:'',
+    stock:'',
+    costo_unidad:'',
+    total:'',
+    status:'',
+    unidad:'',
+    id_control: idcontrol,
   });
 
   ///////////////Insertar Datos//////////////////////////////////
 
-  const handleChange = (e) => {
+  const handleChanged = e => {
     const { name, value } = e.target;
-    setDatosSeleccionados((prevState) => ({
+    setDatosSeleccionados(prevState => ({
       ...prevState,
-      [name]: value,
-    }));
-  };
+      [name]: value
+    }))
+  }
 
   const peticionPost = async () => {
     delete datosSeleccionados.id;
@@ -131,45 +139,74 @@ const InventarioDetalles= () => {
         setModalEditar(false);
       }); */
   };
-  /////////////select categorias//////////////////////////////////
-  const [datacategorias, setDatacategorias] = useState([]);
 
-  const peticionGetcategorias = async () => {
-    await axios.get(urlcategorias).then((response) => {
-      setDatacategorias(response.data);
-      console.log(datacategorias);
+  /////////////Mostrar colores//////////////////////////////////
+  const [datacolores, setDatacolores] = useState([]);
+
+  const peticionGetColores = async () => {
+    await axios.get(urlcolores).then((response) => {
+      setDatacolores(response.data);
+    });
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    await peticionGetColores();
+  }, []);
+
+   /////////////Mostrar unidades//////////////////////////////////
+   const [dataunidades, setDataunidades] = useState([]);
+
+   const peticionGetunidades= async () => {
+     await axios.get(urlunidades).then((response) => {
+       setDataunidades(response.data);
+     });
+   };
+   // eslint-disable-next-line react-hooks/exhaustive-deps
+   useEffect(async () => {
+     await peticionGetunidades();
+   }, []);
+
+  /////////////select almacen//////////////////////////////////
+  const [dataAlmacen, setDataalmacen] = useState([]);
+
+  const peticionGetalmacen = async () => {
+    await axios.get(urlalmacen).then((response) => {
+      setDataalmacen(response.data);
+      console.log(dataAlmacen);
     });
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
-    await peticionGetcategorias();
+    await peticionGetalmacen();
     // eslint-disable-next-line
   }, []);
 
-  //////////////select tipo categorias///////////////////////////
-  const [dataTipocategorias, setDatatipocategorias] = useState([]);
+  //////////////select tipo almacen///////////////////////////
+  const [dataTalmacen, setDataTalmacen] = useState([]);
 
-  const peticionGettc = () => {
-    console.log(urltipocategorias + datosSeleccionados.idcategoria);
-    axios
-      .get(urltipocategorias + datosSeleccionados.idcategoria)
-      .then((response) => {
-        setDatatipocategorias(response.data);
+  const peticionGetTipoAlmacen = () => {
+    if(datosSeleccionados.idalmacen>0){
+    console.log(urltipoalmacen+'/'+datosSeleccionados.idalmacen);
+    axios.get(urltipoalmacen+'/'+datosSeleccionados.idalmacen).then((response) => {
+        setDataTalmacen(response.data);
         console.log(response.data);
       });
+    }
   };
-  //////////////select subcategorias///////////////////////////
-  const [dataSubcategorias, setDatasubcategorias] = useState([]);
 
-  const peticionGetsc = () => {
-    console.log(urlsubcategorias + datosSeleccionados.idtipocategoria);
+  //////////////select ubialmacen///////////////////////////
+  const [dataUA, setDataUA] = useState([]);
+
+const peticionGetUA = () => {
+  if(datosSeleccionados.id_tipo_almacen>0){
     axios
-      .get(urlsubcategorias + datosSeleccionados.idtipocategoria)
+      .get(urlubialmacen+'/'+datosSeleccionados.id_tipo_almacen)
       .then((response) => {
-        setDatasubcategorias(response.data);
+        setDataUA(response.data);
         console.log(response.data);
       });
+    }
   };
 
   /////////////Mostrar articulos filtro//////////////////////////////////
@@ -198,18 +235,17 @@ const InventarioDetalles= () => {
   }, []);
 
   ////////////////badge///////////////////
-  
-  let status={
-    'PENDIENTE':"warning",
-    'PROCESADO':"success",
-    'REALIZADO':"primary",
-    'ELIMINADO':"danger",
-  }
 
+  let status = {
+    PENDIENTE: "warning",
+    PROCESADO: "success",
+    REALIZADO: "primary",
+    ELIMINADO: "danger",
+  };
 
   ////////////////////////////////////////////////////////
   if (datacontrol) {
-     return (
+    return (
       <div>
         <div className="InventarioDetalles">
           <Sidebar>
@@ -217,7 +253,7 @@ const InventarioDetalles= () => {
               <Card.Header className="bg-dark text-white" as="h3">
                 <div className="row">
                   <div className="col-md-6">
-                     Inventario del control #{idcontrol}
+                    Inventario del control #{idcontrol}
                   </div>
                   <div className="col-md-6">
                     <div className="text-right">
@@ -234,19 +270,21 @@ const InventarioDetalles= () => {
               </Card.Header>
               <Card.Body>
                 <Card.Title>Detalles del control de inventario</Card.Title>
-                <p>Introduzca todos los datos de los articulos correspondientes a ese control de inventario</p>
+                <p>
+                  Introduzca todos los datos de los articulos correspondientes a
+                  ese control de inventario
+                </p>
                 <Card.Text>
                   <Card.Text>
                     <Row>
-                    <Col xs={2} md={2}>
+                      <Col xs={2} md={2}>
                         <div className="form-group">
                           <label>Codigo</label>
                           <input
                             className="form-control"
-                            type="number"
-                            min="0"
+                            type="text"
                             name="codigo"
-                            onChange={handleChange}
+                            onChange={handleChanged}
                           />
                         </div>
                       </Col>
@@ -255,10 +293,9 @@ const InventarioDetalles= () => {
                           <label>Serial</label>
                           <input
                             className="form-control"
-                            type="number"
-                            min="0"
-                            name="serial"
-                            onChange={handleChange}
+                            type="text"
+                            name="serialc"
+                            onChange={handleChanged}
                           />
                         </div>
                       </Col>
@@ -267,15 +304,14 @@ const InventarioDetalles= () => {
                           <label>Color</label>
                           <select
                             className="form-control"
-                            name="idcategoria"
-                            id="setcategoria"
-                            onChange={handleChange}
-                            onClick={() => peticionGettc()}
+                            name="color"
+                            id="color"
+                            onChange={handleChanged}
                           >
-                            <option value={0}>Seleccione una opcion</option>
-                            {datacategorias.map((categorias) => (
-                              <option key={categorias.id} value={categorias.id}>
-                                {categorias.nombre}
+                            <option value={0}>Seleccionar</option>
+                            {datacolores.map((colores) => (
+                              <option key={colores.id} value={colores.id}>
+                                {colores.nombre}
                               </option>
                             ))}
                           </select>
@@ -283,57 +319,48 @@ const InventarioDetalles= () => {
                       </Col>
                       <Col xs={2} md={2}>
                         <div className="form-group">
-                          <label>Elegir Almacen</label>
-                          <select
-                            className="form-control"
-                            name="idtipocategoria"
-                            id="settipocategoria"
-                            onChange={handleChange}
-                            onClick={() => peticionGetsc()}
-                          >
-                            <option value={0}>Seleccione una opcion</option>
-                            {dataTipocategorias.map((tcategorias) => (
-                              <option
-                                key={tcategorias.id}
-                                value={tcategorias.id}
-                              >
-                                {tcategorias.nombre}{" "}
-                              </option>
+                          <label>Almacen</label>
+                          <select className="form-control" name="idalmacen" id="idalmacen" onChange={handleChanged}
+                          onClick={() => peticionGetTipoAlmacen()}>
+                            <option value={0}>Seleccionar</option>
+                            {dataAlmacen.map((almacen) => (
+                              <option key={almacen.id} value={almacen.id}> {almacen.nombre}</option>
                             ))}
                           </select>
                         </div>
                       </Col>
                       <Col xs={2} md={2}>
                         <div className="form-group">
-                          <label>Tipo almacen</label>
+                          <label>Tipo de Almacen</label>
                           <select
                             className="form-control"
-                            name="idsubcategoria"
-                            id="settipocategoria"
-                            onChange={handleChange}
+                            name="id_tipo_almacen"
+                            id="id_tipo_almacen"
+                            onChange={handleChanged}
+                            onClick={() => peticionGetUA()}
                           >
-                            <option value={0}>Seleccione una opcion</option>
-                            {dataSubcategorias.map((subcategorias) => (
-                              <option value={subcategorias.id}>
-                                {subcategorias.nombre}{" "}
-                              </option>
-                            ))}
+                            <option value={0}>Seleccionar</option>
+                            {
+                              dataTalmacen.map((talmacen) => (
+                              <option key={talmacen.id} value={talmacen.id}> {talmacen.nombre}</option>
+                            ))
+                            }
                           </select>
                         </div>
                       </Col>
                       <Col xs={2} md={2}>
                         <div className="form-group">
-                          <label>Ubicacion almacen</label>
+                          <label>ubialmacen</label>
                           <select
                             className="form-control"
-                            name="idsubcategoria"
-                            id="settipocategoria"
-                            onChange={handleChange}
+                            name="ubialmacen"
+                            id="ubialmacen"
+                            onChange={handleChanged}
                           >
-                            <option value={0}>Seleccione una opcion</option>
-                            {dataSubcategorias.map((subcategorias) => (
-                              <option value={subcategorias.id}>
-                                {subcategorias.nombre}{" "}
+                            <option value={0}>Seleccionar</option>
+                            {dataUA.map((ubialmacen) => (
+                              <option value={ubialmacen.id}>
+                                {ubialmacen.nombre}
                               </option>
                             ))}
                           </select>
@@ -346,15 +373,14 @@ const InventarioDetalles= () => {
                           <label>Unidad</label>
                           <select
                             className="form-control"
-                            name="idarticulo"
-                            id="idarticulo"
-                            onChange={handleChange}
-                            onClick={() => peticionGetartF()}
+                            name="unidad"
+                            id="unidad"
+                            onChange={handleChanged}
                           >
-                            <option value={0}>Seleccione una articulo</option>
-                            {dataarticulosF.map((articulos) => (
-                              <option key={articulos.id} value={articulos.id}>
-                                {articulos.nombre}
+                            <option value={0}>Seleccionar</option>
+                            {dataunidades.map((unidades) => (
+                              <option key={unidades.id} value={unidades.id}>
+                                {unidades.nombre}
                               </option>
                             ))}
                           </select>
@@ -365,9 +391,9 @@ const InventarioDetalles= () => {
                           <label>Elegir Articulo de la compra#</label>
                           <select
                             className="form-control"
-                            name="idarticulo"
-                            id="idarticulo"
-                            onChange={handleChange}
+                            name="id_articulo"
+                            id="id_articulo"
+                            onChange={handleChanged}
                             onClick={() => peticionGetartF()}
                           >
                             <option value={0}>Seleccione una articulo</option>
@@ -386,8 +412,8 @@ const InventarioDetalles= () => {
                             className="form-control"
                             type="number"
                             min="0"
-                            name="cantidad"
-                            onChange={handleChange}
+                            name="cant_unidad"
+                            onChange={handleChanged}
                           />
                         </div>
                       </Col>
@@ -398,8 +424,8 @@ const InventarioDetalles= () => {
                             className="form-control"
                             type="number"
                             min="0"
-                            name="costo"
-                            onChange={handleChange}
+                            name="cantidad"
+                            onChange={handleChanged}
                           />
                         </div>
                       </Col>
@@ -410,8 +436,8 @@ const InventarioDetalles= () => {
                             className="form-control"
                             type="number"
                             min="0"
-                            name="cantidad"
-                            onChange={handleChange}
+                            name="costo"
+                            onChange={handleChanged}
                           />
                         </div>
                       </Col>
@@ -427,7 +453,10 @@ const InventarioDetalles= () => {
                     <thead>
                       <tr>
                         <th>ID</th>
-                        <th>Nombre</th>
+                        <th>Nombre articulo</th>
+                        <th>Codigo</th>
+                        <th>Serial</th>
+                        <th>Cantidad x unidad</th>
                         <th>Cantidad</th>
                         <th>Costo</th>
                         <th>Subtotal</th>
@@ -441,10 +470,17 @@ const InventarioDetalles= () => {
                           <tr>
                             <td>{dcompras.id}</td>
                             <td>{dcompras.nombre_articulo}</td>
+                            <td>{dcompras.codigo}</td>
+                            <td>{dcompras.serialc}</td>
+                            <td>{dcompras.cant_unidad}</td>
                             <td>{dcompras.cantidad}</td>
-                            <td>{dcompras.costo}</td>
+                            <td>{dcompras.costo_unidad}</td>
                             <td>{dcompras.total}</td>
-                            <td><Badge bg={status[dcompras.status]} text="light">{dcompras.status}</Badge>{' '}</td>
+                            <td>
+                              <Badge bg={status[dcompras.status]} text="light">
+                                {dcompras.status}
+                              </Badge>{" "}
+                            </td>
                             <td>
                               <button
                                 type="button"
@@ -464,7 +500,7 @@ const InventarioDetalles= () => {
                         );
                       })}
                       <tr>
-                        <th colspan="3"></th>
+                        <th colspan="6"></th>
                         <th>Total</th>
                         <th>
                           <p>{dataTotal.total}</p>
@@ -503,7 +539,6 @@ const InventarioDetalles= () => {
                                 className="form-control"
                                 readOnly
                                 type="text"
-                                name="codigo"
                                 value={datacontrol.id}
                               />
                             </div>
@@ -515,7 +550,6 @@ const InventarioDetalles= () => {
                                 className="form-control"
                                 readOnly
                                 type="text"
-                                name="proveedor"
                                 value={datacontrol.id_compra}
                               />
                             </div>
@@ -527,7 +561,6 @@ const InventarioDetalles= () => {
                                 className="form-control"
                                 readOnly
                                 type="date"
-                                name="fecha"
                                 value={datacontrol.fecha}
                               />
                             </div>
@@ -541,7 +574,6 @@ const InventarioDetalles= () => {
                                 className="form-control"
                                 readOnly
                                 type="text"
-                                name="tipocompra"
                                 value={datacontrol.id_usuario}
                               />
                             </div>
@@ -553,19 +585,17 @@ const InventarioDetalles= () => {
                                 className="form-control"
                                 readOnly
                                 type="text"
-                                name="almacen"
                                 value={datacontrol.lote}
                               />
                             </div>
                           </Col>
                           <Col xs={6} md={4}>
-                          <div className="form-group">
+                            <div className="form-group">
                               <label>Contenedor</label>
                               <input
                                 className="form-control"
                                 readOnly
                                 type="text"
-                                name="status"
                                 value={datacontrol.contenedor}
                               />
                             </div>
@@ -621,8 +651,8 @@ const InventarioDetalles= () => {
                     </ModalHeader>
                     <ModalBody>
                       <p>
-                        ¿Estás seguro que desea guardar esta control de inventario con los
-                        articulos de la lista?
+                        ¿Estás seguro que desea guardar esta control de
+                        inventario con los articulos de la lista?
                       </p>
                       {DataDC.nombre}
                     </ModalBody>
@@ -658,7 +688,8 @@ const InventarioDetalles= () => {
           <Card.Body>
             <Card.Title>Este control no existe!</Card.Title>
             <Card.Text>
-              Por favor vuelva a la seccion de control de inventario y elija un control existente!
+              Por favor vuelva a la seccion de control de inventario y elija un
+              control existente!
             </Card.Text>
           </Card.Body>
         </Card>

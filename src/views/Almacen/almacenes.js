@@ -176,6 +176,7 @@ const Almacen = () => {
               <DataTable
                 columns={columns}
                 data={filtrobuscar}
+                noDataComponent="No hay elementos a mostrar"
                 progressPending={pending}
                 progressComponent={<Cargando />}
                 pagination

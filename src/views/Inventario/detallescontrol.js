@@ -56,7 +56,7 @@ const DetallesControl = () => {
     },
     {
       name: 'Articulo',
-      selector: (row) => row.id_articulo,
+      selector: (row) => row.nombre_articulo,
     },
     {
         name: 'Stock',
