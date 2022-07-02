@@ -18,13 +18,13 @@ import {
 
 const url = "https://api.vefase.com/public/inventario/detallesxcontrol"; ///////estos son los articulos del inventario ///////
 const urlcontroles = "https://api.vefase.com/public/inventario/control"; /////esta es el control unico/////////////
+const urlpost = "https://api.vefase.com/public/inventario";
 const urlcolores = "https://api.vefase.com/public/colores";
 const urlalmacen = "https://api.vefase.com/public/almacen";
 const urltipoalmacen = "https://api.vefase.com/public/almacen/tipo/mostrar";
 const urlubialmacen = "https://api.vefase.com/public/almacen/tipo/ubicacion";
 const urlunidades = "https://api.vefase.com/public/unidades";
-
-const urlartfiltro = "https://api.vefase.com/public/articulos/filtro";
+const urlartxcompra = "https://api.vefase.com/public/compras/detallesxcompra";
 const urldcsuma = "https://api.vefase.com/public/inventario/detalles/sum";
 
 const InventarioDetalles = () => {
@@ -80,7 +80,7 @@ const InventarioDetalles = () => {
     cantidad:'',
     cantidad_total:'',
     stock:'',
-    costo_unidad:'',
+    costo:'',
     total:'',
     status:'',
     unidad:'',
@@ -100,11 +100,10 @@ const InventarioDetalles = () => {
   const peticionPost = async () => {
     delete datosSeleccionados.id;
     console.log(datosSeleccionados);
-    /* await axios.post(urlcontroles, datosSeleccionados).then((res) => {
+    await axios.post(urlpost, datosSeleccionados).then((res) => {
       peticionGet();
       peticionGetSum();
-      console.log(res.status);
-    }); */
+    });
   };
 
   /////////////Eliminar datos//////////////////////////////////
@@ -116,12 +115,11 @@ const InventarioDetalles = () => {
   };
 
   const peticionDelete = () => {
-    console.log(urlcontroles + "/" + DataDC);
-    /* axios.delete(urlcontroles + "/" + DataDC).then((response) => {
+    axios.delete(urlpost+ "/" +DataDC.id).then((response) => {
       setModaleliminar(false);
       peticionGet();
       peticionGetSum();
-    }); */
+    });
   };
 
   //////////////cerrar compra/////////////////////////////////////
@@ -132,12 +130,10 @@ const InventarioDetalles = () => {
   };
 
   const peticionPut = async () => {
-    /* await axios
-      .put(urlcontroles + "/" + idcontrol, datosSeleccionados)
-      .then((response) => {
+    await axios.put(urlpost+"/"+datosSeleccionados.id_control).then((response) => {
         peticionGet();
         setModalEditar(false);
-      }); */
+      });
   };
 
   /////////////Mostrar colores//////////////////////////////////
@@ -210,15 +206,20 @@ const peticionGetUA = () => {
   };
 
   /////////////Mostrar articulos filtro//////////////////////////////////
-  const [dataarticulosF, setDataarticulosF] = useState([]);
+  const [dataarticulos, setDataarticulos] = useState([]);
 
-  const peticionGetartF = async () => {
-    await axios.post(urlartfiltro, datosSeleccionados).then((response) => {
-      setDataarticulosF(response.data);
-      console.log(response.data);
+ 
+  const peticionGetart = () => {
+    console.log(urlartxcompra+'/'+datacontrol.id_compra);
+    if(datacontrol.id_compra>0){
+    axios.get(urlartxcompra+'/'+datacontrol.id_compra).then((response) => {
+      console.log(response);
+      setDataarticulos(response.data);
+      
     });
+    }
   };
-  console.log(DataDC);
+
 
   ///////////////Suma total//////////////////////////////////
   const [dataTotal, setDataTotal] = useState([]);
@@ -253,7 +254,7 @@ const peticionGetUA = () => {
               <Card.Header className="bg-dark text-white" as="h3">
                 <div className="row">
                   <div className="col-md-6">
-                    Inventario del control #{idcontrol}
+                  Control de inventario #{idcontrol}
                   </div>
                   <div className="col-md-6">
                     <div className="text-right">
@@ -376,6 +377,7 @@ const peticionGetUA = () => {
                             name="unidad"
                             id="unidad"
                             onChange={handleChanged}
+                            onClick={() => peticionGetart()}
                           >
                             <option value={0}>Seleccionar</option>
                             {dataunidades.map((unidades) => (
@@ -394,12 +396,11 @@ const peticionGetUA = () => {
                             name="id_articulo"
                             id="id_articulo"
                             onChange={handleChanged}
-                            onClick={() => peticionGetartF()}
                           >
                             <option value={0}>Seleccione una articulo</option>
-                            {dataarticulosF.map((articulos) => (
-                              <option key={articulos.id} value={articulos.id}>
-                                {articulos.nombre}
+                            {dataarticulos.map((articulos) => (
+                              <option key={articulos.idarticulo} value={articulos.idarticulo}>
+                                {articulos.nombre_articulo}
                               </option>
                             ))}
                           </select>
@@ -489,7 +490,7 @@ const peticionGetUA = () => {
                                 }
                                 className="btn btn-dark"
                                 onClick={() => {
-                                  setDataDC(dcompras.id);
+                                  setDataDC(dcompras);
                                   abrirModaleliminar();
                                 }}
                               >
@@ -612,19 +613,20 @@ const peticionGetUA = () => {
                       </button>
                     </ModalFooter>
                   </Modal>
+
+
                   <Modal isOpen={modalEliminar} centered>
                     <ModalHeader>
                       <div>
                         <h4>
                           Eliminar Articulo
-                          {datosSeleccionados.idcompra}
                         </h4>
                       </div>
                     </ModalHeader>
                     <ModalBody>
                       <p>
-                        ¿Estás seguro que deseas eliminar este articulo del
-                        control de inventario #{datosSeleccionados.idcontrol}?
+                        ¿Estás seguro que deseas eliminar el articulo <strong>{DataDC.nombre_articulo}</strong> del
+                        control de inventario #{DataDC.id_control}?
                       </p>
                       {DataDC.nombre}
                     </ModalBody>
@@ -646,12 +648,12 @@ const peticionGetUA = () => {
                   <Modal isOpen={modalEditar} centered>
                     <ModalHeader>
                       <div>
-                        <h4>Guardar Control #{datosSeleccionados.idcompra}</h4>
+                        <h4>Guardar Control de inventario #{datosSeleccionados.id_control}</h4>
                       </div>
                     </ModalHeader>
                     <ModalBody>
                       <p>
-                        ¿Estás seguro que desea guardar esta control de
+                        ¿Estás seguro que desea guardar este control de
                         inventario con los articulos de la lista?
                       </p>
                       {DataDC.nombre}
