@@ -16,7 +16,6 @@ const enviarData = async (url, data) => {
   });
   console.log(resp);
   const json = await resp.json();
-  console.log(json);
   return json;
 }
 
@@ -24,6 +23,7 @@ const enviarData = async (url, data) => {
 export default function Login(props) {
   const [error, setError] = useState(null);
   const [espera, setEspera] = useState(false);
+  const [Data, setData] = useState([]);
 
   const refUsuario = useRef(null);
   const refPass = useRef(null);
@@ -35,11 +35,17 @@ export default function Login(props) {
       "clave": refPass.current.value,
     }
     const respuestaJson = await enviarData(URL_LOGIN, data);
-    console.log("respuesta desde el evento", respuestaJson);
-
-    props.acceder(respuestaJson[0].conectado)
+    setData(respuestaJson[0]);
+  
+    props.acceder(respuestaJson[0].conectado)     
     setError(respuestaJson[0].error)
     setEspera(false);
+  }
+
+  if(Data.conectado){
+    window.localStorage.setItem(
+      'loginUser',JSON.stringify(Data)
+    )
   }
 
   return (

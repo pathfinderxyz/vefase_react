@@ -39,7 +39,6 @@ const Router = () => {
         <Routes>
           <Route path="/*" element={<Page404 />}/>
           <Route path="usuarios/permisos" element={<Permisos />}/>
-          <Route path="usuarios/permisos" element={<Permisos />}/>
           <Route path="usuarios/perfiles" element={<Perfiles/>} />
           <Route path="/usuarios" element={<Usuarios/>} />
           <Route path="/ciudades" element={<Ciudades/>}/>

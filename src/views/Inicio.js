@@ -5,8 +5,10 @@ import LineChart from "./graficas/lineal";
 import BarChart from "./graficas/barchart";
 import LineChartS from "./graficas/segmento";
 import LineChartG from "./graficas/segmentogradiente";
+/* import SinPermisos from "./../components/sinpermisos"; */
 
 const Inicio = () => {
+
   return (
     <div>
       <div>
@@ -60,7 +62,16 @@ const Inicio = () => {
         </Sidebar>
       </div>
     </div>
-  );
+  );/* }
+  else{
+    return (
+      <div>
+        <Sidebar>
+          <SinPermisos/>
+        </Sidebar>
+      </div>
+    );
+  } */
 };
 
 export default Inicio;

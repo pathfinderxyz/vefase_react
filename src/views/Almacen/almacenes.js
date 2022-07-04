@@ -8,8 +8,32 @@ import Cargando from "../../components/cargando";
 import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 
 const url = "https://api.vefase.com/public/almacen";
+/* const urlauth = "https://api.vefase.com/public/permisos/almacen"; */
 
 const Almacen = () => {
+
+   //////////////Datos de Usuario Logueado/////////////////////////
+   const [users, setUsers] = useState([]);
+
+   useEffect(() => {
+     const loginUserJSON = window.localStorage.getItem('loginUser')
+     if(loginUserJSON){
+       const user= JSON.parse(loginUserJSON)
+       setUsers(user);
+     }
+   }, []);
+
+   console.log(users);
+
+ /*   const peticionGetAuth = () => {
+    console.log(urlauth+'/'+users.id);
+    axios.get(urlauth+'/'+users.id).then(res => {
+    console.log(res.data);
+  })
+ }  */
+
+
+  
 
   //////////////Iniciando Status data//////////////////////////
   const [data, setData] = useState([]);
