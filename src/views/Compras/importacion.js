@@ -6,12 +6,35 @@ import axios from 'axios';
 import * as FaIcons from "react-icons/fa";
 import Cargando from "../../components/cargando";
 import { Modal, Col, Container, Row, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
+import SinPermisos from "./../../components/sinpermisos";
 
 const url = "https://api.vefase.com/public/importaciones";
 const urlpais = "https://api.vefase.com/public/paises";
 const urlciudades = "https://api.vefase.com/public/ciudades/pais";
+const urlauth = "https://api.vefase.com/public/permisos/ipmportaciones";
 
 const Importaciones = () => {
+
+  //////////////Datos de Usuario Logueado/////////////////////////
+  const [users, setUsers] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  
+
+  useEffect(() => {
+    const loginUserJSON = window.localStorage.getItem('loginUser')
+    if(loginUserJSON){
+      const user= JSON.parse(loginUserJSON)
+      setUsers(user);
+    }
+   }, []);
+    
+   useEffect(() => {
+      axios.get(urlauth+'/'+users.id).then(res => {
+      if(res.data[0]) {
+      setPermisos(res.data[0]);
+      }
+     });
+   }, [users]);
 
   //////////////Iniciando Status data//////////////////////////
   const [data, setData] = useState([]);
@@ -182,6 +205,9 @@ const Importaciones = () => {
   }
 
   /////////////////////////////////////////////////////////////////
+  if(permisos.permisos!==undefined){
+    if(permisos.permisos){
+
   return (
     <div>
       <div className="Importaciones ">
@@ -367,7 +393,24 @@ const Importaciones = () => {
         </Sidebar>
       </div>
     </div>
-  );
+  );}else{
+    return (
+      <div>
+      <Sidebar>
+         <SinPermisos/>
+       </Sidebar>  
+      </div>
+    );
+  }}
+  else{
+    return (
+      <div>
+      <Sidebar>
+         <SinPermisos/>
+       </Sidebar>  
+      </div>
+    );
+  }
 };
 
 export default Importaciones;

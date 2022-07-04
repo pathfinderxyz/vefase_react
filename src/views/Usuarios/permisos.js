@@ -3,12 +3,35 @@ import Sidebar from "../../components/sidebar";
 import Card from "react-bootstrap/Card";
 import { FormGroup, Input, Label, Col, Row } from "reactstrap";
 import axios from "axios";
+import SinPermisos from "./../../components/sinpermisos";
 
 const urluser = "https://api.vefase.com/public/usuarios";
 const urlroles = "https://api.vefase.com/public/perfiles";
 const urlpermisos = "https://api.vefase.com/public/permisos";
+const urlauth = "https://api.vefase.com/public/permisos/permisos";
 
 const Permisos = () => {
+
+  //////////////Datos de Usuario Logueado/////////////////////////
+  const [users, setUsers] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  
+
+  useEffect(() => {
+    const loginUserJSON = window.localStorage.getItem('loginUser')
+    if(loginUserJSON){
+      const user= JSON.parse(loginUserJSON)
+      setUsers(user);
+    }
+   }, []);
+    
+   useEffect(() => {
+      axios.get(urlauth+'/'+users.id).then(res => {
+      if(res.data[0]) {
+      setPermisos(res.data[0]);
+      }
+     });
+   }, [users]);
 
   /////////////Mostrar datos usuarios//////////////////////////////////
   const [datausuario, setDatausuario] = useState([]);
@@ -72,16 +95,22 @@ const Permisos = () => {
       [name]: value
     }))
   }
+  
+  const [Exitoso, setExitoso] = useState(false);
 
   const peticionPost = async () => {
     console.log(datosSeleccionados);
     await axios.post(urlpermisos, datosSeleccionados).then((res) => {
-      console.log(res.data);
-    });
+      setExitoso(true);
+    })
+    .catch((err) => {
+      setExitoso(false);
+    })
   };
 
   //////////////////////////////////////////////////////////////////////////
-
+  if(permisos.permisos!==undefined){
+    if(permisos.permisos){
   return (
     <div>
       <div>
@@ -89,6 +118,13 @@ const Permisos = () => {
           <Card>
             <Card.Header className="bg-dark text-white" as="h3">Asignar Permisos</Card.Header>
             <Card.Body>
+            <p>Asigne los permisos a los usuarios correspondientes en el sistema</p>
+            {
+                Exitoso &&
+                <div className="alert alert-success">
+                  {<strong>Los permisos fueron asignados con exito!</strong>}
+                </div>
+              }
               <Row>
                 <Col xs={6} md={6}>
                   <div className="form-group">
@@ -265,7 +301,6 @@ const Permisos = () => {
                 </Row>
               </Card.Text><br></br>
               <button className="btn btn-success"
-                   disabled
                    onClick={() => peticionPost()}>
                 Asignar permisos
               </button>
@@ -274,7 +309,25 @@ const Permisos = () => {
         </Sidebar>
       </div>
     </div>
+  );}
+  else{
+    return (
+      <div>
+      <Sidebar>
+         <SinPermisos/>
+       </Sidebar>  
+      </div>
+    );
+  }
+}else{
+  return (
+    <div>
+    <Sidebar>
+       <SinPermisos/>
+     </Sidebar>  
+    </div>
   );
+}
 };
 
 export default Permisos;

@@ -12,17 +12,41 @@ import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from "react-router-dom";
 import Badge from 'react-bootstrap/Badge';
+import SinPermisos from "./../../components/sinpermisos";
 
 const url = "https://api.vefase.com/public/compras";
 const urlpro = "https://api.vefase.com/public/proveedores";
 const urlalmacen = "https://api.vefase.com/public/almacen";
 const urlubialmacen = "https://api.vefase.com/public/almacen/xubi";
 const urlimporta = "https://api.vefase.com/public/importaciones";
+const urlauth = "https://api.vefase.com/public/permisos/compras";
 
 
 const Compras = () => {
 
   const navigate = useNavigate();
+
+  //////////////Datos de Usuario Logueado/////////////////////////
+  const [users, setUsers] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  
+
+  useEffect(() => {
+    const loginUserJSON = window.localStorage.getItem('loginUser')
+    if(loginUserJSON){
+      const user= JSON.parse(loginUserJSON)
+      setUsers(user);
+    }
+   }, []);
+    
+   useEffect(() => {
+      axios.get(urlauth+'/'+users.id).then(res => {
+      if(res.data[0]) {
+      setPermisos(res.data[0]);
+      }
+     });
+   }, [users]);
+
 
   //////////////Iniciando Status data//////////////////////////
   const [data, setData] = useState([]);
@@ -284,6 +308,8 @@ const Compras = () => {
 
 
   /////////////////////////////////////////////////////////////////
+  if(permisos.permisos!==undefined){
+    if(permisos.permisos){
   return (
     <div>
       <div className="Compras">
@@ -543,7 +569,24 @@ const Compras = () => {
         </Sidebar>
       </div>
     </div>
-  );
+  );}else{
+    return (
+      <div>
+      <Sidebar>
+         <SinPermisos/>
+       </Sidebar>  
+      </div>
+    );
+  }}
+  else{
+    return (
+      <div>
+      <Sidebar>
+         <SinPermisos/>
+       </Sidebar>  
+      </div>
+    );
+  }
 };
 
 export default Compras;

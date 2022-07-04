@@ -3,16 +3,39 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from "../../components/sidebar";
 import Card from "react-bootstrap/Card";
 import axios from 'axios';
+import SinPermisos from "./../../components/sinpermisos";
 
 const url = "https://api.vefase.com/public/articulos";
 const urlcategorias = "https://api.vefase.com/public/articulos/categorias";
 const urltipocategorias = "https://api.vefase.com/public/articulos/tipocategorias/";
 const urlsubcategorias = "https://api.vefase.com/public/articulos/subcategorias/";
 const urlplan = "https://api.vefase.com/public/plandecuentas";
+const urlauth = "https://api.vefase.com/public/permisos/regarticulos";
 
 const ArticulosRegistrar = () => {
 
   const navigate = useNavigate();
+
+  //////////////Datos de Usuario Logueado/////////////////////////
+  const [users, setUsers] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  
+
+  useEffect(() => {
+    const loginUserJSON = window.localStorage.getItem('loginUser')
+    if(loginUserJSON){
+      const user= JSON.parse(loginUserJSON)
+      setUsers(user);
+    }
+   }, []);
+    
+   useEffect(() => {
+      axios.get(urlauth+'/'+users.id).then(res => {
+      if(res.data[0]) {
+      setPermisos(res.data[0]);
+      }
+     });
+   }, [users]);
 
   //////////////Iniciando Status data//////////////////////////
  
@@ -128,6 +151,8 @@ const ArticulosRegistrar = () => {
  
   
   /////////////////////////////////////////////////////////////////
+  if(permisos.permisos!==undefined){
+    if(permisos.permisos){
   return (
     <div>
       <div className="ArticulosRegistrar">
@@ -278,7 +303,25 @@ const ArticulosRegistrar = () => {
         </Sidebar>
       </div>
     </div>
+  );}
+  else{
+    return (
+      <div>
+      <Sidebar>
+         <SinPermisos/>
+       </Sidebar>  
+      </div>
+    );
+  }
+}else{
+  return (
+    <div>
+    <Sidebar>
+       <SinPermisos/>
+     </Sidebar>  
+    </div>
   );
+}
 };
 
 export default ArticulosRegistrar;

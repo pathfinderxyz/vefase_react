@@ -10,14 +10,37 @@ import { Modal, Col, Container, Row, ModalBody, ModalHeader, ModalFooter } from 
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import Badge from 'react-bootstrap/Badge';
+import SinPermisos from "./../../components/sinpermisos";
 
 const url = "https://api.vefase.com/public/inventario/control";
 const urlcompra = "https://api.vefase.com/public/compras";
+const urlauth = "https://api.vefase.com/public/permisos/ginventario";
 
 
 const ControlInventario = () => {
 
   const navigate = useNavigate();
+
+  //////////////Datos de Usuario Logueado/////////////////////////
+  const [users, setUsers] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  
+
+  useEffect(() => {
+    const loginUserJSON = window.localStorage.getItem('loginUser')
+    if(loginUserJSON){
+      const user= JSON.parse(loginUserJSON)
+      setUsers(user);
+    }
+   }, []);
+    
+   useEffect(() => {
+      axios.get(urlauth+'/'+users.id).then(res => {
+      if(res.data[0]) {
+      setPermisos(res.data[0]);
+      }
+     });
+   }, [users]);
 
   //////////////Iniciando Status data//////////////////////////
   const [data, setData] = useState([]);
@@ -185,6 +208,10 @@ const ControlInventario = () => {
     'ELIMINADO': "danger",
   }
   /////////////////////////////////////////////////////////////////
+
+  
+if(permisos.permisos!==undefined){
+  if(permisos.permisos){
   return (
     <div>
       <div className="ControlInventario">
@@ -304,7 +331,25 @@ const ControlInventario = () => {
         </Sidebar>
       </div>
     </div>
-  );
+  );}
+  else{
+    return (
+      <div>
+      <Sidebar>
+         <SinPermisos/>
+       </Sidebar>  
+      </div>
+    );
+  }}
+  else{
+    return (
+      <div>
+      <Sidebar>
+         <SinPermisos/>
+       </Sidebar>  
+      </div>
+    );
+  }
 };
 
 export default ControlInventario;

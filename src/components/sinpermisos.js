@@ -6,7 +6,7 @@ const SinPermisos= () => {
     <div>
       <div>
           <Card>
-            <Card.Header className="bg-dark text-white" as="h3">No esta Autorizado</Card.Header>
+            <Card.Header className="bg-dark text-white" as="h3">Autorización</Card.Header>
             <Card.Body>
               <Card.Title>¡Usted no tiene permisos para acceder a este modulo!</Card.Title>
               <Card.Text>

@@ -66,8 +66,8 @@ const Router = () => {
           <Route path="/articulos/categorias" element={<Categorias />}/>
           <Route path="/articulos/registrar" element={<ArticulosRegistrar />}/>
           <Route path="/articulos" element={<ArticulosRegistrados/>}/>
-          <Route path="/inicio" element={<Inicio />} />
-          <Route path="/" element={<App />} />
+          <Route path="/inicio" element={<Inicio/>} />
+          <Route path="/" element={<App/>} />
         </Routes>
       </BrowserRouter>
     </div>

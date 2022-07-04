@@ -6,11 +6,20 @@ import Accordion from 'react-bootstrap/Accordion';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const Sidebar = ({ children }) => {
+
+    const navigate = useNavigate();
+
     const [isOpen, setIsOpen] = useState(true);
     const toggle = () => setIsOpen(!isOpen);
+
+    const handlelogout =() => {
+        window.localStorage.removeItem('loginUser'); 
+        navigate('/');
+    }
 
     return (
         <div>
@@ -27,9 +36,7 @@ const Sidebar = ({ children }) => {
                 <Nav.Item>
                     <Nav.Link eventKey="link-1"><FaIcons.FaTools/></Nav.Link>
                 </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link eventKey="link-2"><FaIcons.FaWindowClose /></Nav.Link>
-                </Nav.Item>
+                
 
             </Nav>
 {/* ---------------------------------------Sidebar------------------------------------------------ */}            
@@ -135,11 +142,11 @@ const Sidebar = ({ children }) => {
                                         </Link>
                                     </Accordion.Body>
                                 </Accordion.Item>
-                                <Accordion.Item>
+                                <Accordion.Item >
                                     <Accordion.Header>
-                                        <Link to='/' className='enlace'>
+                                        <p className='enlace'  onClick={() => handlelogout()}>
                                             <FaIcons.FaDoorClosed /> Salir
-                                        </Link>
+                                        </p>
                                     </Accordion.Header>
                                 </Accordion.Item>
                             </Accordion>

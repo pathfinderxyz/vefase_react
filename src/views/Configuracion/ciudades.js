@@ -6,11 +6,34 @@ import axios from 'axios';
 import * as FaIcons from "react-icons/fa";
 import Cargando from "../../components/cargando";
 import { Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
+import SinPermisos from "./../../components/sinpermisos";
 
 const url = "https://api.vefase.com/public/ciudades";
 const urlpaises = "https://api.vefase.com/public/paises";
+const urlauth = "https://api.vefase.com/public/permisos/ciudades";
 
 const Ciudades = () => {
+
+  //////////////Datos de Usuario Logueado/////////////////////////
+  const [users, setUsers] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  
+
+  useEffect(() => {
+    const loginUserJSON = window.localStorage.getItem('loginUser')
+    if(loginUserJSON){
+      const user= JSON.parse(loginUserJSON)
+      setUsers(user);
+    }
+   }, []);
+    
+   useEffect(() => {
+      axios.get(urlauth+'/'+users.id).then(res => {
+      if(res.data[0]) {
+      setPermisos(res.data[0]);
+      }
+     });
+   }, [users]);
 
   //////////////Iniciando Status data//////////////////////////
   const [data, setData] = useState([]);
@@ -169,6 +192,8 @@ const Ciudades = () => {
   },[]);
 
   /////////////////////////////////////////////////////////////////
+  if(permisos.permisos!==undefined){
+    if(permisos.permisos){
   return (
     <div>
       <div className="Ciudades">
@@ -323,7 +348,24 @@ const Ciudades = () => {
         </Sidebar>
       </div>
     </div>
-  );
+  );}else{
+    return (
+      <div>
+      <Sidebar>
+         <SinPermisos/>
+       </Sidebar>  
+      </div>
+    );
+  }}
+  else{
+    return (
+      <div>
+      <Sidebar>
+         <SinPermisos/>
+       </Sidebar>  
+      </div>
+    );
+  }
 };
 
 export default Ciudades;
