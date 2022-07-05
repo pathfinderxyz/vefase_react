@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState} from 'react';
 import './../assets/css/login.css';
 import logvefase from './../assets/img/VEFASE-LOGO2.jpg';
 import { useNavigate } from 'react-router-dom';

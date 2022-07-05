@@ -4,7 +4,6 @@ import './../assets/css/sidebar.css';
 import logovefase from './../assets/img//logo_vefase.png';
 import Accordion from 'react-bootstrap/Accordion';
 import Nav from 'react-bootstrap/Nav';
-import axios from 'axios';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
