@@ -13,27 +13,29 @@ const urlauth = "https://api.vefase.com/public/permisos/almacen";
 
 const Almacen = () => {
 
-   //////////////Datos de Usuario Logueado/////////////////////////
-   const [users, setUsers] = useState([]);
-   const [permisos, setPermisos] = useState([]);
-   
+  //////////////Datos de Usuario Logueado/////////////////////////
+  const [users, setUsers] = useState([]);
+  const [permisos, setPermisos] = useState([]);
+  
 
+  useEffect(() => {
+    const loginUserJSON = window.localStorage.getItem('loginUser')
+    if(loginUserJSON){
+      const user= JSON.parse(loginUserJSON)
+      setUsers(user);
+    }
+   }, []);
+    
    useEffect(() => {
-     const loginUserJSON = window.localStorage.getItem('loginUser')
-     if(loginUserJSON){
-       const user= JSON.parse(loginUserJSON)
-       setUsers(user);
-     }
-    }, []);
-     
-    useEffect(() => {
-       axios.get(urlauth+'/'+users.id).then(res => {
-       setPermisos(res.data[0]);
-      });
-    }, [users]);
-   
+      axios.get(urlauth+'/'+users.id).then(res => {
+      if(res.data[0]) {
+      setPermisos(res.data[0]);
+      }
+     });
+   }, [users]);
+  
 
-    console.log(permisos.permisos);
+   console.log(permisos.permisos);
 
   //////////////Iniciando Status data//////////////////////////
   const [data, setData] = useState([]);

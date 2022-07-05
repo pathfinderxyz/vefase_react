@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as FaIcons from "react-icons/fa";
 import './../assets/css/sidebar.css';
 import logovefase from './../assets/img//logo_vefase.png';
 import Accordion from 'react-bootstrap/Accordion';
 import Nav from 'react-bootstrap/Nav';
+import axios from 'axios';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +12,20 @@ import { useNavigate } from 'react-router-dom';
 
 const Sidebar = ({ children }) => {
 
-    const navigate = useNavigate();
+    let navigate = useNavigate();
+
+     //////////////Datos de Usuario Logueado/////////////////////////
+   const [users, setUsers] = useState([]);
+   
+
+   useEffect(() => {
+     const loginUserJSON = window.localStorage.getItem('loginUser')
+     if(loginUserJSON){
+       const user= JSON.parse(loginUserJSON)
+       setUsers(user);
+     }
+    }, []);
+   
 
     const [isOpen, setIsOpen] = useState(true);
     const toggle = () => setIsOpen(!isOpen);
@@ -25,17 +39,16 @@ const Sidebar = ({ children }) => {
         <div>
  {/* ---------------------------------------Navbar------------------------------------------------ */}
             <Nav className="justify-content-end Nav1" activeKey="/home">
+                <Nav.Item>
+                    <Nav.Link eventKey="link-1"><FaIcons.FaUserAlt/>  {users.username}</Nav.Link>
+                </Nav.Item>
                 <Nav>
-                    <NavDropdown id="nav-dropdown-dark-example" title={<FaIcons.FaUserAlt/>}>
-                        <NavDropdown.Item><Link to="/usuarios" className='enlacenav'>Usuarios</Link></NavDropdown.Item>
-                        <NavDropdown.Item><Link to="/usuarios/perfiles" className='enlacenav'>Perfiles</Link></NavDropdown.Item>
-                        <NavDropdown.Item><Link to="/usuarios/permisos" className='enlacenav'>Permisos</Link></NavDropdown.Item>
+                    <NavDropdown id="nav-dropdown-dark-example" title={<FaIcons.FaRegSun/>}>
+                        <NavDropdown.Item><Link to="/usuarios/info" className='enlacenav'>Mis datos</Link></NavDropdown.Item>
+                        <NavDropdown.Item><p className='enlacenav'  onClick={() => handlelogout()}>Salir</p></NavDropdown.Item>
                         
                     </NavDropdown>
                 </Nav>
-                <Nav.Item>
-                    <Nav.Link eventKey="link-1"><FaIcons.FaTools/></Nav.Link>
-                </Nav.Item>
                 
 
             </Nav>
@@ -139,6 +152,20 @@ const Sidebar = ({ children }) => {
                                         </Link><br></br>
                                         <Link to='/ciudades'>
                                         ► Ciudades
+                                        </Link>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                                <Accordion.Item eventKey="6">
+                                    <Accordion.Header><FaIcons.FaUser />Gestion de usuarios</Accordion.Header>
+                                    <Accordion.Body>
+                                    <Link to='/usuarios'>
+                                        ► Usuarios
+                                        </Link><br></br>
+                                        <Link to='/usuarios/perfiles'>
+                                        ► Perfiles 
+                                        </Link><br></br>
+                                        <Link to='/usuarios/permisos'>
+                                        ► Permisos
                                         </Link>
                                     </Accordion.Body>
                                 </Accordion.Item>

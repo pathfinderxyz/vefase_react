@@ -1,51 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import './../assets/css/login.css';
-import { useRef } from 'react';
 import logvefase from './../assets/img/VEFASE-LOGO2.jpg';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const URL_LOGIN = "https://api.vefase.com/public/login"
 
-const enviarData = async (url, data) => {
+const Login = () => {
 
-  const resp = await fetch(url, {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-  console.log(resp);
-  const json = await resp.json();
-  return json;
-}
-
-
-export default function Login(props) {
-  const [error, setError] = useState(null);
+  let navigate = useNavigate();
+  const [error, setError] = useState(false);
+  const [errordatos, setErrordatos] = useState(false);
   const [espera, setEspera] = useState(false);
   const [Data, setData] = useState([]);
 
-  const refUsuario = useRef(null);
-  const refPass = useRef(null);
+  const [datosSeleccionados, setDatosSeleccionados] = useState({
+    usuario: '',
+    clave: ''
+  });
 
-  const handleLogin = async () => {
-    setEspera(true);
-    const data = {
-      "usuario": refUsuario.current.value,
-      "clave": refPass.current.value,
-    }
-    const respuestaJson = await enviarData(URL_LOGIN, data);
-    setData(respuestaJson[0]);
-  
-    props.acceder(respuestaJson[0].conectado)     
-    setError(respuestaJson[0].error)
-    setEspera(false);
+
+  const handleChange = e => {
+    const { name, value } = e.target;
+    setDatosSeleccionados(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
   }
 
-  if(Data.conectado){
+  const handleLogin = async () => {
+    console.log(datosSeleccionados);
+    await axios.post(URL_LOGIN,datosSeleccionados).then(res => {
+      setData(res.data[0]);
+      setError(false);
+      setEspera(false);
+      if(res.data[0].error){
+        setErrordatos(true);
+      }
+    })
+    .catch((err) => {
+      setError(true);
+      setEspera(true);
+    })
+  }
+
+ if(Data.conectado){
     window.localStorage.setItem(
       'loginUser',JSON.stringify(Data)
-    )
+    );
+    navigate('/inicio');
   }
 
   return (
@@ -63,11 +66,11 @@ export default function Login(props) {
                       <div className="col-sm-12">
                         <input
                           className="form-control"
-                          name="username"
+                          name="usuario"
                           type="text"
                           required=""
                           placeholder="Usuario"
-                          ref={refUsuario}
+                          onChange={handleChange}
                         />{" "}
                       </div>
                     </div>
@@ -76,19 +79,26 @@ export default function Login(props) {
                       <div className="col-sm-12">
                         <input
                           className="form-control"
-                          name="password"
+                          name="clave"
                           type="password"
                           required=""
                           placeholder="Password"
-                          ref={refPass}
+                          onChange={handleChange}
                         />{" "}
                       </div>
                     </div>
+                    
+                    {
+                      errordatos &&
+                      <div className="alert alert-danger">
+                        <h6>Datos de usuario incorrectos</h6>
+                      </div>
+                    }
 
                     {
                       error &&
                       <div className="alert alert-danger">
-                        {error}
+                        <h6>No hay coneccion a internet</h6>
                       </div>
                     }
 
@@ -118,3 +128,5 @@ export default function Login(props) {
        
 	);  
 }
+
+export default Login;

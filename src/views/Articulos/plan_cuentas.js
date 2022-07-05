@@ -11,34 +11,35 @@ import SinPermisos from "./../../components/sinpermisos";
 const url = "https://api.vefase.com/public/plandecuentas";
 const urlauth = "https://api.vefase.com/public/permisos/plancuentas";
 
-const PlandeCuentas= () => {
+const PlandeCuentas = () => {
 
   //////////////Datos de Usuario Logueado/////////////////////////
   const [users, setUsers] = useState([]);
   const [permisos, setPermisos] = useState([]);
-  
+
 
   useEffect(() => {
     const loginUserJSON = window.localStorage.getItem('loginUser')
-    if(loginUserJSON){
-      const user= JSON.parse(loginUserJSON)
+    if (loginUserJSON) {
+      const user = JSON.parse(loginUserJSON)
       setUsers(user);
     }
-   }, []);
-    
-   useEffect(() => {
-      axios.get(urlauth+'/'+users.id).then(res => {
-      if(res.data[0]) {
-      setPermisos(res.data[0]);
+  }, []);
+
+  useEffect(() => {
+    axios.get(urlauth + '/' + users.id).then(res => {
+      if (res.data[0]) {
+        setPermisos(res.data[0]);
       }
-     });
-   }, [users]);
+    });
+  }, [users]);
 
   //////////////Iniciando Status data//////////////////////////
   const [data, setData] = useState([]);
 
   const [datosSeleccionados, setDatosSeleccionados] = useState({
     id: '',
+    codigo: '',
     nombre: '',
     status: ''
   });
@@ -63,14 +64,18 @@ const PlandeCuentas= () => {
 
   const columns = [
     {
-      name: 'Id',
-      selector: (row) => row.id,
+      name: 'Codigo',
+      selector: (row) => row.codigo,
       defaultSortAsc: true,
       sortable: true,
     },
     {
       name: 'Nombre de plan de cuentas',
       selector: (row) => row.nombre,
+    },
+    {
+      name: 'Inventario',
+      selector: (row) => row.inventario,
     },
     {
       name: 'Status',
@@ -168,160 +173,181 @@ const PlandeCuentas= () => {
   }
 
   /////////////////////////////////////////////////////////////////
-  if(permisos.permisos!==undefined){
-    if(permisos.permisos){
-  return (
-    <div>
-      <div className="PlandeCuentas">
-        <Sidebar>
-          <Card>
-            <Card.Header className="bg-dark text-white" as="h3">
-              <div className='row'>
-                <div className='col-md-6'>
-                  Plan de cuentas
-                </div>
-                <div className='col-md-6'>
-                  <div className="text-right">
-                    <button type="button" className="btn btn-warning text-dark" onClick={() => abrirModalInsertar()}>
-                    <FaIcons.FaPlus/>Añadir Plan de cuentas
-                    </button>
+  if (permisos.permisos !== undefined) {
+    if (permisos.permisos) {
+      return (
+        <div>
+          <div className="PlandeCuentas">
+            <Sidebar>
+              <Card>
+                <Card.Header className="bg-dark text-white" as="h3">
+                  <div className='row'>
+                    <div className='col-md-6'>
+                      Plan de cuentas
+                    </div>
+                    <div className='col-md-6'>
+                      <div className="text-right">
+                        <button type="button" className="btn btn-warning text-dark" onClick={() => abrirModalInsertar()}>
+                          <FaIcons.FaPlus />Añadir Plan de cuentas
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </Card.Header>
-            <Card.Body>
-              <Card.Title>Plan de cuentas registrados</Card.Title>
-              {
-                Error &&
-                <div className="alert alert-danger">
-                  {<strong>Error: El nombre ya existe! intente con otro nombre.</strong>}
-                </div>
-              }
-              <p>Plan de cuentas registrados en el sistema.</p>
-              <DataTable
-                columns={columns}
-                data={filtrobuscar}
-                progressPending={pending}
-                progressComponent={<Cargando />}
-                pagination
-                paginationComponentOptions={paginationComponentOptions}
-                subHeader
-                subHeaderComponent={
-                  <input
-                    type="text"
-                    placeholder="Buscar"
-                    className="w-25 form-control"
-                    value={buscar}
-                    onChange={(e) => setBuscar(e.target.value)}
+                </Card.Header>
+                <Card.Body>
+                  <Card.Title>Plan de cuentas registrados</Card.Title>
+                  {
+                    Error &&
+                    <div className="alert alert-danger">
+                      {<strong>Error: El nombre o el codigo ya existe! intente con otro nombre.</strong>}
+                    </div>
+                  }
+                  <p>Plan de cuentas registrados en el sistema.</p>
+                  <DataTable
+                    columns={columns}
+                    data={filtrobuscar}
+                    noDataComponent="No hay elementos a mostrar"
+                    progressPending={pending}
+                    progressComponent={<Cargando />}
+                    pagination
+                    paginationComponentOptions={paginationComponentOptions}
+                    subHeader
+                    subHeaderComponent={
+                      <input
+                        type="text"
+                        placeholder="Buscar"
+                        className="w-25 form-control"
+                        value={buscar}
+                        onChange={(e) => setBuscar(e.target.value)}
+                      />
+                    }
                   />
-                }
-              />
 
-              <Modal isOpen={modalInsertar}>
-                <ModalHeader>
-                  <div>
-                    <h4>Insertar Plan de cuentas</h4>
-                  </div>
-                </ModalHeader>
-                <ModalBody>
-                  <div className="form-group">
-                    <label>Plan de cuentas</label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      name="nombre"
-                      required=""
-                      onChange={handleChange}
-                    />
-                    <br />
-                  </div>
-                </ModalBody>
-                <ModalFooter>
-                  <button
-                    className="btn btn-dark"
-                    onClick={() => setModalInsertar(false)}
-                  >
-                    Cancelar
-                  </button>
-                  <button className="btn btn-success"
-                    onClick={() => peticionPost()}>
-                    Insertar
-                  </button>
+                  <Modal isOpen={modalInsertar}>
+                    <ModalHeader>
+                      <div>
+                        <h4>Insertar Plan de cuentas</h4>
+                      </div>
+                    </ModalHeader>
+                    <ModalBody>
+                      <div className="form-group">
+                        <label>Codigo</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          name="codigo"
+                          required=""
+                          onChange={handleChange}
+                        />
+                        <br /><br />
+                        <label>Nombre Plan de cuentas</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          name="nombre"
+                          required=""
+                          onChange={handleChange}
+                        />
+                        <br />
+                      </div>
+                    </ModalBody>
+                    <ModalFooter>
+                      <button
+                        className="btn btn-dark"
+                        onClick={() => setModalInsertar(false)}
+                      >
+                        Cancelar
+                      </button>
+                      <button className="btn btn-success"
+                        onClick={() => peticionPost()}>
+                        Insertar
+                      </button>
 
-                </ModalFooter>
-              </Modal>
+                    </ModalFooter>
+                  </Modal>
 
-              <Modal isOpen={modalEditar}>
-                <ModalHeader>
-                  <div>
-                    <h4>Editar Plan de cuentas</h4>
-                  </div>
-                </ModalHeader>
-                <ModalBody>
-                  <div className="form-group">
-                    <input
-                      className="form-control" readOnly
-                      type="hidden"
-                      name="id"
-                      value={datosSeleccionados.id}
-                      onChange={handleChange}
-                    />
-
-
-                    <label>Plan de cuentas</label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      name="nombre"
-                      value={datosSeleccionados.nombre}
-                      onChange={handleChange}
-
-                    />
-
-                    <br /><br />
-
-                    <label>Status</label>
-                    <select className='form-control' value={datosSeleccionados.status} name='status' id="setalmacen" onChange={handleChange}>
-                      <option value={'ACTIVO'}>ACTIVO</option>
-                      <option value={'INACTIVO'}>INACTIVO</option>
-                    </select>
+                  <Modal isOpen={modalEditar}>
+                    <ModalHeader>
+                      <div>
+                        <h4>Editar Plan de cuentas</h4>
+                      </div>
+                    </ModalHeader>
+                    <ModalBody>
+                      <div className="form-group">
+                        <input
+                          className="form-control" readOnly
+                          type="hidden"
+                          name="id"
+                          value={datosSeleccionados.id}
+                          onChange={handleChange}
+                        />
 
 
-                  </div>
-                </ModalBody>
-                <ModalFooter>
-                  <button
-                    className="btn btn-dark"
-                    onClick={() => setModalEditar(false)}
-                  >
-                    Cancelar
-                  </button>
-                  <button className="btn btn-success" onClick={() => peticionPut()}>
-                    Actualizar
-                  </button>
-                </ModalFooter>
-              </Modal>
-            </Card.Body>
-          </Card>
+                        <label>Plan de cuentas</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          name="nombre"
+                          value={datosSeleccionados.nombre}
+                          onChange={handleChange}
+
+                        />
+
+                        <br /><br />
+
+                        <label>Inventario</label>
+                        <select className='form-control' value={datosSeleccionados.inventario} name='inventario'
+                         id="setinventario" onChange={handleChange}>
+                          <option value={'SI'}>SI</option>
+                          <option value={'NO'}>NO</option>
+                        </select>
+
+                        <br /><br />
+
+                        <label>Status</label>
+                        <select className='form-control' value={datosSeleccionados.status} name='status' id="setalmacen" onChange={handleChange}>
+                          <option value={'ACTIVO'}>ACTIVO</option>
+                          <option value={'INACTIVO'}>INACTIVO</option>
+                        </select>
+
+
+                      </div>
+                    </ModalBody>
+                    <ModalFooter>
+                      <button
+                        className="btn btn-dark"
+                        onClick={() => setModalEditar(false)}
+                      >
+                        Cancelar
+                      </button>
+                      <button className="btn btn-success" onClick={() => peticionPut()}>
+                        Actualizar
+                      </button>
+                    </ModalFooter>
+                  </Modal>
+                </Card.Body>
+              </Card>
+            </Sidebar>
+          </div>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div>
+          <Sidebar>
+            <SinPermisos />
+          </Sidebar>
+        </div>
+      );
+    }
+  }
+  else {
+    return (
+      <div>
+        <Sidebar>
+          <SinPermisos />
         </Sidebar>
-      </div>
-    </div>
-  );}
-  else{
-    return (
-      <div>
-      <Sidebar>
-         <SinPermisos/>
-       </Sidebar>  
-      </div>
-    );
-  }}
-  else{
-    return (
-      <div>
-      <Sidebar>
-         <SinPermisos/>
-       </Sidebar>  
       </div>
     );
   }
