@@ -7,6 +7,9 @@ import * as FaIcons from "react-icons/fa";
 import Cargando from "../../components/cargando";
 import { Link } from "react-router-dom";
 import SinPermisos from "./../../components/sinpermisos";
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Modal,ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 
 const url = "https://api.vefase.com/public/articulos";
 const urlauth = "https://api.vefase.com/public/permisos/verarticulos";
@@ -87,9 +90,12 @@ const  ArticulosRegistrados= () => {
       name: 'Accion',
       button: true,
       cell: (row) =>
-        <Link className="btn btn-dark"  to={"/articulos/editar/"+row.id}>
-          <FaIcons.FaPencilAlt />
-        </Link>
+        <Nav>
+         <NavDropdown id="nav-dropdown-dark-example" title={<FaIcons.FaRegSun/>} className="stylenav">
+             <NavDropdown.Item><Link to={"/articulos/editar/"+row.id}>Editar </Link></NavDropdown.Item>   
+             <NavDropdown.Item onClick={() => abrirModalImagen()}>Ver Imagen</NavDropdown.Item>                  
+         </NavDropdown>
+      </Nav>
     }
   ];
   /////////////Buscar datos//////////////////////////////////
@@ -116,6 +122,13 @@ const  ArticulosRegistrados= () => {
   useEffect(async () => {
     await peticionGet();
   }, []);
+
+  //////////////Modal imagen//////////////////////////////////
+  const [modalImagen, setModalImagen] = useState(false);
+  const abrirModalImagen = () => {
+    setModalImagen(true);
+  }
+  
 
 
   /////////////////////////////////////////////////////////////////
@@ -164,136 +177,26 @@ const  ArticulosRegistrados= () => {
                 }
               />
 
-            {/*   <Modal isOpen={modalInsertar}>
+            <Modal isOpen={modalImagen} centered>
                 <ModalHeader>
                   <div>
-                    <h4>Insertar Subcategorias</h4>
+                    <h4>Imagen de articulo</h4>
                   </div>
                 </ModalHeader>
                 <ModalBody>
-                  <div className="form-group">
-                    <label>Subcategoria</label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      name="nombre"
-                      required=""
-                      onChange={handleChange}
-                    />
-                    <br /><br />
-
-                    <label>Categorias</label>
-                    <select className='form-control' name='idcategoria' id="setcategoria" onClick={() => peticionGettc()}
-                    onChange={handleChange}>
-                      <option value={0}>Seleccione una opcion</option>
-                      {
-                        datacategorias.map(categorias => (
-                          <option value={categorias.id}>{categorias.nombre} </option>
-                        ))
-
-                      }
-                      
-                    </select>
-              
-                  <br/> <br/> <br/>
-                  <label>Tipo de categorias</label>
-                    <select className='form-control' name='idtipocategorias' id="settipocategorias" onChange={handleChange}>
-                      <option value={0}>Seleccione una opcion</option>
-                      {
-                        dataTipocategorias.map(talmacen => (
-                          <option value={talmacen.id}>{talmacen.nombre} </option>
-                        ))
-                      }
-                    </select>
-                  </div>
+                  <p>imagen</p>
                 </ModalBody>
                 <ModalFooter>
                   <button
                     className="btn btn-dark"
-                    onClick={() => setModalInsertar(false)}
+                    onClick={() => setModalImagen(false)}
                   >
-                    Cancelar
-                  </button>
-                  <button className="btn btn-success"
-                    onClick={() => peticionPost()}>
-                    Insertar
-                  </button>
-
-                </ModalFooter>
-              </Modal> */}
-
-              {/* <Modal isOpen={modalEditar}>
-                <ModalHeader>
-                  <div>
-                    <h4>Editar Subcategoria</h4>
-                  </div>
-                </ModalHeader>
-                <ModalBody>
-                  <div className="form-group">
-                    <input
-                      className="form-control" readOnly
-                      type="hidden"
-                      name="id"
-                      value={datosSeleccionados.id}
-                      onChange={handleChange}
-                    />
-
-
-                    <label>Subcategoria</label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      name="nombre"
-                      value={datosSeleccionados.nombre}
-                      onChange={handleChange}
-
-                    />
-                    <br /><br />
-
-                    <label>Categorias</label>
-                    <select className='form-control' value={datosSeleccionados.idcategoria} name='idcategoria' 
-                    id="setcategoria" onClick={() => peticionGettc()} onChange={handleChange}>
-                      {
-                        datacategorias.map(categorias => (
-                          <option value={categorias.id}>{categorias.nombre} </option>
-                        ))
-
-                      }
-                    </select>
-
-                    <br/> <br/>
-                  <label>Tipo de categorias</label>
-                    <select className='form-control' value={dataTipocategorias.id} name='idtipocategorias' 
-                    id="settipocategorias"  onChange={handleChange}>
-                         <option value={datosSeleccionados.idtipocategorias}>{datosSeleccionados.tipocategorias} </option>
-                      {
-                        dataTipocategorias.map(tcategorias => (
-                          <option value={tcategorias.id}>{tcategorias.nombre} </option>
-                        ))
-                      }
-                    </select>
-                    <br/><br/>
-                    <label>Status</label>
-                    <select className='form-control' value={datosSeleccionados.status} name='status' id="setstatus" onChange={handleChange}>
-                      <option value={'ACTIVO'}>ACTIVO</option>
-                      <option value={'INACTIVO'}>INACTIVO</option>
-                    </select>
-
-
-                  </div>
-                </ModalBody>
-                <ModalFooter>
-                  <button
-                    className="btn btn-dark"
-                    onClick={() => setModalEditar(false)}
-                  >
-                    Cancelar
-                  </button>
-                  <button className="btn btn-success" onClick={() => peticionPut()}>
-                    Actualizar
+                    Cerrar
                   </button>
                 </ModalFooter>
-              </Modal> */}
+              </Modal> 
+
+             
             </Card.Body>
           </Card>
         </Sidebar>

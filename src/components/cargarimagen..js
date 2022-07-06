@@ -7,6 +7,7 @@ const url = "https://api.vefase.com/public/imagen";
 
 const CargarImagen = () => {
 
+ 
   const [file, setFile] = useState(null);
 
   const handleFile = (e) => {
@@ -18,6 +19,7 @@ const CargarImagen = () => {
 
   const peticionPost = () => {
     let formData = new FormData();
+    formData.append("id",1);
     formData.append("file", file);
     axios.post(url, formData, {
         headers: {
@@ -40,6 +42,10 @@ const CargarImagen = () => {
           <Card>
             <Card.Header className="bg-dark text-white" as="h3">
               Subir imagen
+              {
+                Error &&
+                <h3>ha ocurrido un Error</h3>
+              }
             </Card.Header>
             <Card.Body>
               <Card.Title>subir imagen</Card.Title>
