@@ -4,7 +4,6 @@ import Card from "react-bootstrap/Card";
 const SinPermisos= () => {
   return (
     <div>
-      <div>
           <Card>
             <Card.Body>
               <Card.Title>¡Usted no tiene permisos para acceder a este modulo!</Card.Title>
@@ -13,7 +12,6 @@ const SinPermisos= () => {
               </Card.Text>
             </Card.Body>
           </Card>
-      </div>
     </div>
   );
 };
