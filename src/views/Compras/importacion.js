@@ -11,7 +11,7 @@ import SinPermisos from "./../../components/sinpermisos";
 const url = "https://api.vefase.com/public/importaciones";
 const urlpais = "https://api.vefase.com/public/paises";
 const urlciudades = "https://api.vefase.com/public/ciudades/pais";
-const urlauth = "https://api.vefase.com/public/permisos/ipmportaciones";
+const urlauth = "https://api.vefase.com/public/permisos/importaciones";
 
 const Importaciones = () => {
 
