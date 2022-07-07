@@ -40,6 +40,9 @@ const  ArticulosRegistrados= () => {
   //////////////Iniciando Status data//////////////////////////
   const [data, setData] = useState([]);
 
+  const [datosSeleccionados, setDatosSeleccionados] = useState({
+    imgurl: '',
+  });
 
   /////////////////Datatable/////////////////////////////////
 
@@ -93,7 +96,7 @@ const  ArticulosRegistrados= () => {
         <Nav>
          <NavDropdown id="nav-dropdown-dark-example" title={<FaIcons.FaRegSun/>} className="stylenav">
              <NavDropdown.Item><Link to={"/articulos/editar/"+row.id}>Editar </Link></NavDropdown.Item>   
-             <NavDropdown.Item onClick={() => abrirModalImagen()}>Ver Imagen</NavDropdown.Item>                  
+             <NavDropdown.Item onClick={() => {setDatosSeleccionados(row);abrirModalImagen()}}>Ver Imagen</NavDropdown.Item>                  
          </NavDropdown>
       </Nav>
     }
@@ -184,7 +187,14 @@ const  ArticulosRegistrados= () => {
                   </div>
                 </ModalHeader>
                 <ModalBody>
-                  <p>imagen</p>
+                  <div className="text-center">
+                   <img 
+                     src={
+                      datosSeleccionados.imgurl ? datosSeleccionados.imgurl : "https://api.vefase.com/routes/assets/vefaselog.jpg"
+                      }
+                     width={300}
+                     alt='some value'/>
+                     </div>
                 </ModalBody>
                 <ModalFooter>
                   <button
