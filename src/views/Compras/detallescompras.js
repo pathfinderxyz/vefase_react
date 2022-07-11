@@ -4,8 +4,10 @@ import axios from "axios";
 import Sidebar from "../../components/sidebar";
 import Card from "react-bootstrap/Card";
 import * as FaIcons from "react-icons/fa";
+
 import Badge from 'react-bootstrap/Badge';
 import { useParams } from "react-router-dom";
+
 import {
   Modal,
   Col,
@@ -28,7 +30,6 @@ const urldcsuma = "https://api.vefase.com/public/compras/detalles/sum";
 
 const DetallesCompras = () => {
   let { idcompra } = useParams();
-  console.log(idcompra);
 
   const [data, setData] = useState([]);
   /*  const [Boton, setBoton] = useState(false); */
@@ -38,7 +39,6 @@ const DetallesCompras = () => {
     await axios.get(url + "/" + idcompra).then((response) => {
       console.log(response.data);
       setData(response.data);
-      console.log(response.data);
     });
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,7 +60,6 @@ const DetallesCompras = () => {
     });
   };
 
-  console.log(datacompra);
 
   useEffect(async () => {
     await peticionGetcompras();
@@ -70,6 +69,7 @@ const DetallesCompras = () => {
   const [datosSeleccionados, setDatosSeleccionados] = useState({
     id: "",
     idcompra: idcompra,
+    idarticulo:"",
     nombre: "",
     cantidad: "",
     costo: "",
@@ -82,6 +82,8 @@ const DetallesCompras = () => {
   });
 
   ///////////////Insertar Datos//////////////////////////////////
+  const [Error, setError] = useState(false);
+  const [Exitoso, setExitoso] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,13 +93,25 @@ const DetallesCompras = () => {
     }));
   };
 
+  const validardatos = () => {
+      console.log(datosSeleccionados);
+      if (datosSeleccionados.idarticulo > 0) {
+        peticionPost();
+      } else {
+        setTimeout(() => {
+          setError(true);
+       }, 2000);
+       setExitoso(false);
+      }
+  };
+
   const peticionPost = async () => {
     delete datosSeleccionados.id;
-    console.log(datosSeleccionados);
     await axios.post(urlcd, datosSeleccionados).then((res) => {
       peticionGet();
       peticionGetSum();
-      console.log(res.status);
+      setExitoso(true);
+      setError(false);
     });
   };
 
@@ -110,7 +124,6 @@ const DetallesCompras = () => {
   };
 
   const peticionDelete = () => {
-    console.log(urlcd + "/" + DataDC);
     axios.delete(urlcd + "/" + DataDC).then((response) => {
       setModaleliminar(false);
       peticionGet();
@@ -121,7 +134,6 @@ const DetallesCompras = () => {
   //////////////cerrar compra/////////////////////////////////////
   const [modalEditar, setModalEditar] = useState(false);
   const abrirModalEditar = () => {
-    console.log(datosSeleccionados);
     setModalEditar(true);
   };
 
@@ -139,7 +151,6 @@ const DetallesCompras = () => {
   const peticionGetcategorias = async () => {
     await axios.get(urlcategorias).then((response) => {
       setDatacategorias(response.data);
-      console.log(datacategorias);
     });
   };
 
@@ -153,24 +164,20 @@ const DetallesCompras = () => {
   const [dataTipocategorias, setDatatipocategorias] = useState([]);
 
   const peticionGettc = () => {
-    console.log(urltipocategorias + datosSeleccionados.idcategoria);
     axios
       .get(urltipocategorias + datosSeleccionados.idcategoria)
       .then((response) => {
         setDatatipocategorias(response.data);
-        console.log(response.data);
       });
   };
   //////////////select subcategorias///////////////////////////
   const [dataSubcategorias, setDatasubcategorias] = useState([]);
 
   const peticionGetsc = () => {
-    console.log(urlsubcategorias + datosSeleccionados.idtipocategoria);
     axios
       .get(urlsubcategorias + datosSeleccionados.idtipocategoria)
       .then((response) => {
         setDatasubcategorias(response.data);
-        console.log(response.data);
       });
   };
 
@@ -180,10 +187,8 @@ const DetallesCompras = () => {
   const peticionGetartF = async () => {
     await axios.post(urlartfiltro, datosSeleccionados).then((response) => {
       setDataarticulosF(response.data);
-      console.log(response.data);
     });
   };
-  console.log(DataDC);
 
   ///////////////Suma total//////////////////////////////////
   const [dataTotal, setDataTotal] = useState([]);
@@ -235,8 +240,39 @@ const DetallesCompras = () => {
                 </div>
               </Card.Header>
               <Card.Body>
-                <Card.Title>Detalles de la compra</Card.Title>
+              <div className="row">
+                 <div className="col-md-6">
+                 <div className="text-left">
+                 <Card.Title>Detalles de la compra</Card.Title>
                 <p>Introduzca todos los datos de la compra</p>
+                 </div>
+                 </div>
+                 <div className="col-md-2"></div>
+                 <div className="col-md-4">
+                 <div className="text-left">
+                 {
+                  Error && (
+                    <div className="alert alert-danger">
+                      {
+                        <strong>
+                        <FaIcons.FaWindowClose/> ¡Ha ocurrido un error! hay un campo vacio.
+                        </strong>
+                      }
+                    </div>
+                  )}
+                  {Exitoso && (
+                    <div className="alert alert-success">
+                      {
+                        <strong>
+                        <FaIcons.FaCheckCircle/> Exitoso: ¡El articulo ha sido agregado con exito!
+                        </strong>
+                      }
+                    </div>
+                  )}
+                 </div>
+                 </div>
+                </div>
+               
                 <Card.Text>
                   <Card.Text>
                     <Row>
@@ -347,7 +383,7 @@ const DetallesCompras = () => {
                     </Row>
                     <button
                       className="btn btn-success"
-                      onClick={() => peticionPost()}
+                      onClick={() =>  validardatos()}
                     >
                       <FaIcons.FaPlusCircle /> Agregar
                     </button>
