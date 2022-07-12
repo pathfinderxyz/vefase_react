@@ -88,6 +88,8 @@ const InventarioDetalles = () => {
   });
 
   ///////////////Insertar Datos//////////////////////////////////
+  const [Error, setError] = useState(false);
+  const [Exitoso, setExitoso] = useState(false);
 
   const handleChanged = e => {
     const { name, value } = e.target;
@@ -97,12 +99,25 @@ const InventarioDetalles = () => {
     }))
   }
 
+  const validardatos = () => {
+    console.log(datosSeleccionados);
+    if (datosSeleccionados.id_articulo > 0) {
+      peticionPost();
+    } else {
+      setError(true);
+     setExitoso(false);
+    }
+};
+
+
   const peticionPost = async () => {
     delete datosSeleccionados.id;
     console.log(datosSeleccionados);
     await axios.post(urlpost, datosSeleccionados).then((res) => {
       peticionGet();
       peticionGetSum();
+      setExitoso(true);
+      setError(false);
     });
   };
 
@@ -270,11 +285,40 @@ const peticionGetUA = () => {
                 </div>
               </Card.Header>
               <Card.Body>
-                <Card.Title>Detalles del control de inventario</Card.Title>
+              <div className="row">
+                 <div className="col-md-6">
+                 <div className="text-left">
+                 <Card.Title>Detalles del control de inventario</Card.Title>
                 <p>
                   Introduzca todos los datos de los articulos correspondientes a
-                  ese control de inventario
-                </p>
+                  ese control de inventario</p>
+                 </div>
+                 </div>
+                 <div className="col-md-2"></div>
+                 <div className="col-md-4">
+                 <div className="text-left">
+                 {
+                  Error && (
+                    <div className="alert alert-danger">
+                      {
+                        <strong>
+                        <FaIcons.FaWindowClose/> ¡Ha ocurrido un error! hay un campo vacio.
+                        </strong>
+                      }
+                    </div>
+                  )}
+                  {Exitoso && (
+                    <div className="alert alert-success">
+                      {
+                        <strong>
+                        <FaIcons.FaCheckCircle/> Exitoso: ¡El articulo ha sido agregado con exito!
+                        </strong>
+                      }
+                    </div>
+                  )}
+                 </div>
+                 </div>
+                </div>
                 <Card.Text>
                   <Card.Text>
                     <Row>
@@ -445,7 +489,7 @@ const peticionGetUA = () => {
                     </Row>
                     <button
                       className="btn btn-success"
-                      onClick={() => peticionPost()}
+                      onClick={() =>  validardatos()}
                     >
                       <FaIcons.FaPlusCircle /> Agregar
                     </button>
@@ -466,7 +510,7 @@ const peticionGetUA = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {data.map((dcompras) => {
+                      {data.sort((a,b)=>b.id-a.id).map((dcompras) => {
                         return (
                           <tr>
                             <td>{dcompras.id}</td>

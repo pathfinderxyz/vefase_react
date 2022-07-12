@@ -33,6 +33,7 @@ import DetallesControl from "../views/Inventario/detallescontrol";
 import InventarioDetalles from "../views/Inventario/inventariodetalles";
 import DatosUsuarios from "../views/Usuarios/datosusuarios";
 import CargarImagen from "../components/cargarimagen.";
+import Bitacora from "../views/Bitacora/bitacora";
 
 const Router = () => {
   return (
@@ -40,6 +41,7 @@ const Router = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/*" element={<Page404 />}/>
+          <Route path="/bitacora" element={<Bitacora/>}/>
           <Route path="/imagen" element={<CargarImagen/>}/>
           <Route path="/usuarios/info" element={<DatosUsuarios />}/>
           <Route path="/usuarios/permisos" element={<Permisos />}/>

@@ -8,7 +8,6 @@ import Cargando from "../../components/cargando";
 import { Link } from "react-router-dom";
 import SinPermisos from "./../../components/sinpermisos";
 import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Modal,ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 
 const url = "https://api.vefase.com/public/articulos";
@@ -63,7 +62,21 @@ const  ArticulosRegistrados= () => {
   });
 
   const columns = [
-  
+    {
+      name: 'Accion',
+      button: true,
+      cell: (row) =>
+        <Nav>
+            <button className="btn btn-default"
+               onClick={() => {setDatosSeleccionados(row);abrirModalImagen()}}
+            >
+            <FaIcons.FaRegImage/>
+            </button>&nbsp;&nbsp;&nbsp;    
+        
+            <Link to={"/articulos/editar/"+row.id} className="mt-2"> <FaIcons.FaRegEdit/></Link>     
+
+      </Nav>
+    },
     {
       name: 'Nombre',
       selector: (row) => row.nombre,
@@ -88,18 +101,8 @@ const  ArticulosRegistrados= () => {
     {
       name: 'Subcategoria',
       selector: (row) => row.subcategoria,
-    },
-    {
-      name: 'Accion',
-      button: true,
-      cell: (row) =>
-        <Nav>
-         <NavDropdown id="nav-dropdown-dark-example" title={<FaIcons.FaRegSun/>} className="stylenav">
-             <NavDropdown.Item><Link to={"/articulos/editar/"+row.id}>Editar </Link></NavDropdown.Item>   
-             <NavDropdown.Item onClick={() => {setDatosSeleccionados(row);abrirModalImagen()}}>Ver Imagen</NavDropdown.Item>                  
-         </NavDropdown>
-      </Nav>
     }
+    
   ];
   /////////////Buscar datos//////////////////////////////////
   const [buscar, setBuscar] = useState("");

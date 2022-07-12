@@ -9,7 +9,6 @@ import Cargando from "../../components/cargando";
 import { Modal, Col, Container, Row, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from "react-router-dom";
 import Badge from 'react-bootstrap/Badge';
 import SinPermisos from "./../../components/sinpermisos";
@@ -93,10 +92,17 @@ const Compras = () => {
       button: true,
       cell: (row) =>
       <Nav>
-         <NavDropdown id="nav-dropdown-dark-example" title={<FaIcons.FaRegSun/>} className="stylenav">
-             <NavDropdown.Item onClick={() => { setDatosSeleccionados(row); abrirModalEditar() }} >Editar</NavDropdown.Item>
-             <NavDropdown.Item><Link to={"/compras/report/"+row.id}>Detalles compras </Link></NavDropdown.Item>                    
-         </NavDropdown>
+ 
+            <button className="btn btn-default"
+               onClick={() => { setDatosSeleccionados(row); abrirModalEditar() }} 
+            >
+            <FaIcons.FaRegEdit/>
+            </button>&nbsp;&nbsp;&nbsp;    
+        
+            <Link to={"/compras/report/"+row.id} className="mt-2"><FaIcons.FaRegEye/></Link>     
+        
+             
+    
       </Nav>
     },
     {

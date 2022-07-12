@@ -168,6 +168,13 @@ const Sidebar = ({ children }) => {
                                         </Link>
                                     </Accordion.Body>
                                 </Accordion.Item>
+                                <Accordion.Item>
+                                        <Link to='/bitacora'>
+                                        <Accordion.Header>
+                                            <FaIcons.FaHistory /> Bitacora
+                                            </Accordion.Header>
+                                        </Link>
+                                </Accordion.Item>
                                 <Accordion.Item >
                                     <Accordion.Header>
                                         <p className='enlace'  onClick={() => handlelogout()}>

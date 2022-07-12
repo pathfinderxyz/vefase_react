@@ -7,7 +7,6 @@ import * as FaIcons from "react-icons/fa";
 
 import Badge from 'react-bootstrap/Badge';
 import { useParams } from "react-router-dom";
-
 import {
   Modal,
   Col,
@@ -401,7 +400,7 @@ const DetallesCompras = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {data.map((dcompras) => {
+                      {data.sort((a,b)=>b.id-a.id).map((dcompras) => {
                         return (
                           <tr>
                             <td>{dcompras.id}</td>
